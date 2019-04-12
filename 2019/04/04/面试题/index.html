@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="牛客网面试题-第一周什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。 Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://SunJiubo.github.io/2019/04/04/面试题/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="牛客网面试题-第一周什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。 Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-11T11:24:23.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="牛客网面试题-第一周什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。 Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/04/面试题/">
+
+
+
+
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/面试题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-04T09:11:47+08:00">
+                2019-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="牛客网面试题-第一周"><a href="#牛客网面试题-第一周" class="headerlink" title="牛客网面试题-第一周"></a>牛客网面试题-第一周</h2><h3 id="什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"><a href="#什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？" class="headerlink" title="什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"></a>什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？</h3><p>Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。</p>
+<p>Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.class字节码文件（java的跨平台指的就是.class字节码文件的跨平台，.class字节码文件是与平台无关的），.class文件再运行在jvm上，Java解释器（jvm的一部分）会将其解释成对应平台的机器码执行，所以Java所谓的跨平台就是在不同平台上安装了不同的jvm，而在不同平台上生成的.class文件都是一样的，而.class文件再由对应平台的jvm解释成对应平台的机器码执行。Java虚拟机让这个变成可能，因为他知道底层硬件平台的指令长度和其他特性。</p>
+<h3 id="JDK和JRE的区别是什么？"><a href="#JDK和JRE的区别是什么？" class="headerlink" title="JDK和JRE的区别是什么？"></a>JDK和JRE的区别是什么？</h3><p>Java运行时环境(JRE)。它包括Java虚拟机、Java核心类库和支持文件。是使用Java语言编写的程序运行所需要的软件环境，是提供给想运行Java程序的用户使用的。它不包括开发工具(JDK)–编译器、调试器和其他工具。</p>
+<p>Java开发工具包(JDK)是完整的Java软件开发包，是提供给程序员使用的。包含了JRE，编译器和其他工具(比如：JavaDoc，Java调试器)，可以让开发者开发、编译、执行Java应用程序。</p>
+<h3 id="“static”关键字是什么意思？Java中是否可以覆盖-override-一个private或者是static的方法？"><a href="#“static”关键字是什么意思？Java中是否可以覆盖-override-一个private或者是static的方法？" class="headerlink" title="“static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？"></a>“static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？</h3><p>“static”表示静态的意义，它可以修饰成员变量和成员函数，被其修饰的变量被称为类变量，被其修饰的方法成为类方法，被静态修饰的成员函数只能访问静态成员，不可以访问分静态成员。其随着类的加载而被加载，所以可以在没有所属的类的实例的情况下被访问。static可以修饰内部类，但是不能修饰普通类。</p>
+<p>Java中的static方法不能被覆盖，因为方法覆盖是基于运行时动态绑定的，而static方法是编译时静态绑定的。<br>static方法跟类的任何实例都不相关，所以在概念上不适用。</p>
+<p>Java中也不可以覆盖private方法，因为private修饰的变量和方法只能在当前类中使用，如果是其他的类继承当前类是不能访问到private变量或方法的，当然也不能覆盖。</p>
+<h3 id="是否可以在static环境中访问非static变量？"><a href="#是否可以在static环境中访问非static变量？" class="headerlink" title="是否可以在static环境中访问非static变量？"></a>是否可以在static环境中访问非static变量？</h3><p>static变量在java中是属于类的，他在所有的实例中的值是一样的。当类被Java虚拟机载入的时候，会对static变量进行初始化，如果你的代码尝试不用实例来访问非static的变量，编译器会报错，因为这些变量还没被创建出来，还没有跟任何实例关联上。</p>
+<h3 id="Java支持的数据类型有哪些？什么是自动拆装箱？"><a href="#Java支持的数据类型有哪些？什么是自动拆装箱？" class="headerlink" title="Java支持的数据类型有哪些？什么是自动拆装箱？"></a>Java支持的数据类型有哪些？什么是自动拆装箱？</h3><p>Java支持的数据类型分为两种，一种是基础类型，另外一种是引用类型<br>基础类型的数据有8种：byte,short,int,long,float,double,char,boolean;</p>
+<p>另外一种是引用类型：如String等，其实就是对象的引用，JVM中虚拟栈中存放的就是对象的地址，创建的对象实质在堆中的对象的过程，通过地址来找到堆中的对象的过程，即为引用类型。</p>
+<p>自动装箱是Java编译器在基本数据类型和对应的对象包装类型之间的转化，即int转化为Integer，自动拆箱是Integer调用其方法将其转化为int的过程。</p>
+<h3 id="Java中的方法覆盖-Overriding-和方法重载-Overload-是什么意思？"><a href="#Java中的方法覆盖-Overriding-和方法重载-Overload-是什么意思？" class="headerlink" title="Java中的方法覆盖(Overriding)和方法重载(Overload)是什么意思？"></a>Java中的方法覆盖(Overriding)和方法重载(Overload)是什么意思？</h3><p>Java中的方法重载发生在同一个类里面两个或者多个方法中</p>
+<ul>
+<li>方法名相同</li>
+<li>参数不同（个数不同、类型不同、参数类型排列顺序不同等，其中之一就可以）</li>
+<li>方法的返回值可以相同也可以不同</li>
+<li>仅仅返回类型不同不足以成为方法的重载</li>
+<li>重载发生在编译时，以为编译器可以根据参数的类型来选择使用哪个方法</li>
+</ul>
+<p>方法覆盖是说子类重新定义了父类的方法。</p>
+<ul>
+<li>方法覆盖必须有相同的方法名，参数列表，返回类型可以相同也可以是原类型的子类型(从Java SE5开始支持)。</li>
+<li>覆盖着可能不会限制他所覆盖的方法的访问。</li>
+<li>重写方法不能比原方法访问性差（即访问权限不允许缩小）。</li>
+<li>重写方法不能比原方法抛出更多的异常。</li>
+<li>被重写的方法不能是final类型，因为final修饰的方法是无法重写的。</li>
+<li>被重写的方法不能是private，否则只是在子类中定义了一个方法，并没有对其进行重写。</li>
+<li>被重写的方法不能是static。如果父类中的方法为静态的，而子类中的方法不是静态的，但是两个方法除了这一点其他都满足重写条件，那么会发生编译异常；反之亦然。即使父类和子类中的方法都是静态的，并且满足重写条件，但是依然不会发生重写，因为静态方法是在编译的时候把静态方法和类的引用类型进行匹配，即static方法是编译时静态绑定，而重写是运行时的动态绑定。</li>
+<li>重写是发生在运行时的，因为编译期编译器不知道并且没办法确定该去调用哪个方法，JVM会在代码运行的时候作出决定。 </li>
+</ul>
+<p>两者的不同：</p>
+<ul>
+<li>重写要求参数列表必须一致，而重载要求参数列表必须不同</li>
+<li>方法重写要求返回类型必须一致(或为其子类型)，方法重载对此没有要求。 </li>
+<li>方法重写只能用于子类重写父类的方法，方法重载用于同一个类中的所有方法。 </li>
+<li>方法重写对方法的访问权限和抛出的异常有特殊的要求，而方法重载在这方面没有任何限制。 </li>
+<li>父类的一个方法只能被子类重写一次，而一个方法可以在所有的类中可以被重载多次。 </li>
+<li>重载是编译时多态，重写是运行时多态。 </li>
+</ul>
+<h3 id="Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？"><a href="#Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？" class="headerlink" title="Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？"></a>Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？</h3><p>当新对象被创建的时候，构造方法会被调用。每一个类都有构造方法，在程序员没有给类提供构造方法的情况下，Java编译器会给这个类创建一个默认的构造方法。</p>
+<p>Java中构造方法重载和方法重载很像。可以为一个类创建多个构造方法。每一个构造方法必须有他自己唯一的参数列表。</p>
+<p>Java不支持像C++中那样的复制构造函数，这个不同点是因为如果你不自己写构造方法的情况下，Java不会创建默认的复制构造方法。</p>
+<h3 id="Java支持多继承吗？"><a href="#Java支持多继承吗？" class="headerlink" title="Java支持多继承吗？"></a>Java支持多继承吗？</h3><p>Java中的类不支持多继承，只支持单继承（即一个类只有一个父类）。但是Java中的接口支持多继承，即一个接口可以有多个父接口。（接口的作用是用来扩展对象的功能，一个子接口继承多个父接口，说明子接口扩展了多个功能，当类实现接口时，类就扩展了相应的功能）。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" rel="prev" title="MySQL技术内幕--第1章 MySQL体系结构和存储引擎">
+                MySQL技术内幕--第1章 MySQL体系结构和存储引擎 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#牛客网面试题-第一周"><span class="nav-number">1.</span> <span class="nav-text">牛客网面试题-第一周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK和JRE的区别是什么？"><span class="nav-number">1.2.</span> <span class="nav-text">JDK和JRE的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#“static”关键字是什么意思？Java中是否可以覆盖-override-一个private或者是static的方法？"><span class="nav-number">1.3.</span> <span class="nav-text">“static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#是否可以在static环境中访问非static变量？"><span class="nav-number">1.4.</span> <span class="nav-text">是否可以在static环境中访问非static变量？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java支持的数据类型有哪些？什么是自动拆装箱？"><span class="nav-number">1.5.</span> <span class="nav-text">Java支持的数据类型有哪些？什么是自动拆装箱？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中的方法覆盖-Overriding-和方法重载-Overload-是什么意思？"><span class="nav-number">1.6.</span> <span class="nav-text">Java中的方法覆盖(Overriding)和方法重载(Overload)是什么意思？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？"><span class="nav-number">1.7.</span> <span class="nav-text">Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java支持多继承吗？"><span class="nav-number">1.8.</span> <span class="nav-text">Java支持多继承吗？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
