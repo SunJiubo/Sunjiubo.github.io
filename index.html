@@ -229,174 +229,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/第1章 MySQL体系结构和存储引擎/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="孙九博">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" itemprop="url">MySQL技术内幕--第1章 MySQL体系结构和存储引擎</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-04T09:30:19+08:00">
-                2019-04-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="第1章-MySQL体系结构和存储引擎"><a href="#第1章-MySQL体系结构和存储引擎" class="headerlink" title="第1章 MySQL体系结构和存储引擎"></a>第1章 MySQL体系结构和存储引擎</h2><h3 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h3><p>概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合；</p>
-<p>数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。</p>
-<p>MySQL由以下几部分组成</p>
-<ul>
-<li>连接池组件</li>
-<li>管理服务和工具组件</li>
-<li>SQL接口组件</li>
-<li>查询分析器组件</li>
-<li>优化器组件</li>
-<li>缓冲组件</li>
-<li>插件式存储引擎</li>
-<li>物理文件</li>
-</ul>
-<p>MySQL数据库区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySql插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身需要的，如SQK分析器和优化器等，而存储引擎是底层物理结构实现的，每个存储引擎开发者可以按照自己的意愿来开发。</p>
-<p><code>需要特别注意的是，存储引擎是基于表的，而不是数据库。</code>所以在创建表时，后面要标注对应的引擎。</p>
-<h3 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h3><p>存储引擎的好处是，每个存储引擎都有各自的特点，能够根据具体的应用建立不同存储引擎表。而MySQL数据库的核心在于存储引擎。MySQL数据库是开源的，可以根据预定义的存储引擎接口编写自己的存储引擎。</p>
-<h4 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h4><p>InnoDB存储引擎支持失误，其设计目标主要面向在线事务处理(OLTP)的应用。其特点是行锁设计、支持外键，并支持类似于Oracle的非锁定读，即默认读取操作不会产生锁。</p>
-<p>InnoDB存储引擎将数据放在一个逻辑的表空间中，这个表空间就像黑盒一样由InnoDB存储引擎自身进行管理。InnoDB通过使用多版本并发控制（MVCC）来获得高并发性，并且实现了SQL标准的4种隔离级别，默认为REPEATABLE级别。同时，使用一种被称为next-keylocking的策略来避免幻读现象的产生。还提供了插入缓冲、二次写、自适应哈希索引、预读等高性能和高可用的功能。</p>
-<p>对于表中数据的存储，InnoDB存储引擎采用了聚集的方式，因为每张表的存储都是按逐渐的顺序进行存放。如果没有显式的在表定义时指定主键，InnoDB存储引擎会为每一行生成一个6字节的ROWID，并以此作为主键。</p>
-<h4 id="MyISAM存储引擎"><a href="#MyISAM存储引擎" class="headerlink" title="MyISAM存储引擎"></a>MyISAM存储引擎</h4><p>MyISAM存储引擎不支持事务、表锁设计，支持全文索引，主要面向一些OLAP数据库应用。</p>
-<p>MyISAM存储引擎的缓冲池只缓冲(cache)索引文件，而不缓冲数据文件，数据文件交由操作系统本身完成，这点与大多数数据库都非常不同。</p>
-<p>MyISAM存储引擎表由MYD和MYI组成，MYD用来存放数据文件，MYI用来存放索引文件。</p>
-<h4 id="NDB存储引擎"><a href="#NDB存储引擎" class="headerlink" title="NDB存储引擎"></a>NDB存储引擎</h4><p>NDB存储引擎是一个集群存储引擎，其结构式share nothing的集群架构，因此能提供更高的可用性。</p>
-<p>NDB存储引擎的特点是数据全部放在内存中（从Mysql 5.1开始，可以将非索引数据放到磁盘上），因此主键查找的速度极快，并且通过添加NDB数据存储节点(Data Node)可以线性的提高数据库性能，是高可用、高性能的集群系统。</p>
-<p>NDB存储引擎的连接操作(JOIN)是在MySQL数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此查询速度很慢。</p>
-<h4 id="Memory存储引擎"><a href="#Memory存储引擎" class="headerlink" title="Memory存储引擎"></a>Memory存储引擎</h4><p>Memory存储引擎将表中的数据存放在内存中，如果数据库重启或发生崩溃，表中数据都将消失。非常适合存储临时数据的临时表，以及数据仓库的纬度表。Memory存储引擎默认使用哈希索引，而不是B+树索引。</p>
-<p>Memory存储引擎只支持表锁，并发性能差，不支持TEXT和BLOB列类型。存储定长字段(varchar)时是按照定长字段(char)的方式进行的，因此会浪费内存。</p>
-<p>MySQL数据库使用Memory存储引擎作为临时表来存放查询的中间结果集。如果中间结果集大于Memory存储引擎表的容量设置，又或者中间结果包含TEXT和BLOB列类型字段，则MySQL数据库会把其转换到MyISAM存储引擎边儿存放到磁盘中。因为MyISAM存储引擎不缓存数据文件，因此产生的临时表的性能对于查询会有损失。</p>
-<h4 id="Archive存储引擎"><a href="#Archive存储引擎" class="headerlink" title="Archive存储引擎"></a>Archive存储引擎</h4><p>Archive存储引擎只支持INSERT和SELECT操作。</p>
-<p>非常适合存储归档数据</p>
-<p>其本身并不是事务安全的存储引擎，其设计目标主要是提供高速的插入和压缩功能。</p>
-<h4 id="Federated存储引擎"><a href="#Federated存储引擎" class="headerlink" title="Federated存储引擎"></a>Federated存储引擎</h4><p>不存放数据，只是指向一台远程MySQL数据库服务器上的表。</p>
-<h4 id="Maria存储引擎"><a href="#Maria存储引擎" class="headerlink" title="Maria存储引擎"></a>Maria存储引擎</h4><p>设计目标是要来取代MyISAM存储引擎，从而成为MySQL的默认引擎。</p>
-<p>特点是：支持缓存数据和索引文件，应用了行锁设计，提供了MVCC功能，支持事务和非事务安全的选项，以及更好的BLOB字符类型的处理性能。</p>
-<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ul>
-<li><p>为什么MySQL数据库不支持全文索引？</p>
-<p>  不，MySQL支持，MyISAM、InnoDB(1.2版本)和Sphinx存储引擎都支持全文索引。</p>
-</li>
-<li><p>MySQL数据库速度快是因为不支持事务？<br>  错！虽然MySQL的MyISAM存储引擎不支持事务，但是InnoDB支持。”快”是相对于不同应用来说的，对于ETL这种操作，MyISAM会有其优势，但在OLTP环境中，InnoDB存储引擎的效率更好。</p>
-</li>
-<li>当表的数据量大于1000万时MySQL的性能会急剧下降吗？<br>  不！MySQL是数据库，不是文件，随着数据行数的增加，性能当然会有所下降，但是这些下降不是线性的，如果用户选择了正确的存储引擎，以及正确的配置，再多的数据量，MySQL也能承受。</li>
-</ul>
-<h3 id="连接MySQL"><a href="#连接MySQL" class="headerlink" title="连接MySQL"></a>连接MySQL</h3><h4 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h4><p>在TCP/IP连接上接力一个基于网络的连接请求，一般情况下客户端(client)在一台服务器上，而MySQL实例(server)在另外一台服务器上，这两台机器通过一个TCP/IP网络连接。</p>
-<p>在通过TCP/IP连接到MySQL实例时，MySQL数据库会先检查一张权限试图，用来判断发起请求的客户端IP是否允许连接到MySQL实例。</p>
-<h4 id="命名管道和共享内存"><a href="#命名管道和共享内存" class="headerlink" title="命名管道和共享内存"></a>命名管道和共享内存</h4><p>在Windows的平台上，如果两个需要进程通信的进程在同一台服务器上，那么可以使用命名管道。在MySQL数据库中虚在配置文件中启用–enable-named-pipe选项。</p>
-<p>在4.1之后版本中，MySQL还提供了共享内存的连接方式。</p>
-<h4 id="UNIX域套现字"><a href="#UNIX域套现字" class="headerlink" title="UNIX域套现字"></a>UNIX域套现字</h4><p>可以在Linux和UNIX环境下使用。</p>
-<p>应为域套现字不是网络协议，所以只能在客户端和数据库实例在一台服务器上的情况下使用。</p>
-<p>用户可以在配置文件中指定套现字文件的路径。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/简单介绍工程中的综合排序算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -638,6 +470,174 @@
 <p>Java中构造方法重载和方法重载很像。可以为一个类创建多个构造方法。每一个构造方法必须有他自己唯一的参数列表。</p>
 <p>Java不支持像C++中那样的复制构造函数，这个不同点是因为如果你不自己写构造方法的情况下，Java不会创建默认的复制构造方法。</p>
 <h3 id="Java支持多继承吗？"><a href="#Java支持多继承吗？" class="headerlink" title="Java支持多继承吗？"></a>Java支持多继承吗？</h3><p>Java中的类不支持多继承，只支持单继承（即一个类只有一个父类）。但是Java中的接口支持多继承，即一个接口可以有多个父接口。（接口的作用是用来扩展对象的功能，一个子接口继承多个父接口，说明子接口扩展了多个功能，当类实现接口时，类就扩展了相应的功能）。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/第1章 MySQL体系结构和存储引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" itemprop="url">MySQL技术内幕--第1章 MySQL体系结构和存储引擎</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-04T09:30:19+08:00">
+                2019-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="第1章-MySQL体系结构和存储引擎"><a href="#第1章-MySQL体系结构和存储引擎" class="headerlink" title="第1章 MySQL体系结构和存储引擎"></a>第1章 MySQL体系结构和存储引擎</h2><h3 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h3><p>概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合；</p>
+<p>数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。</p>
+<p>MySQL由以下几部分组成</p>
+<ul>
+<li>连接池组件</li>
+<li>管理服务和工具组件</li>
+<li>SQL接口组件</li>
+<li>查询分析器组件</li>
+<li>优化器组件</li>
+<li>缓冲组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li>
+</ul>
+<p>MySQL数据库区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySql插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身需要的，如SQK分析器和优化器等，而存储引擎是底层物理结构实现的，每个存储引擎开发者可以按照自己的意愿来开发。</p>
+<p><code>需要特别注意的是，存储引擎是基于表的，而不是数据库。</code>所以在创建表时，后面要标注对应的引擎。</p>
+<h3 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h3><p>存储引擎的好处是，每个存储引擎都有各自的特点，能够根据具体的应用建立不同存储引擎表。而MySQL数据库的核心在于存储引擎。MySQL数据库是开源的，可以根据预定义的存储引擎接口编写自己的存储引擎。</p>
+<h4 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h4><p>InnoDB存储引擎支持失误，其设计目标主要面向在线事务处理(OLTP)的应用。其特点是行锁设计、支持外键，并支持类似于Oracle的非锁定读，即默认读取操作不会产生锁。</p>
+<p>InnoDB存储引擎将数据放在一个逻辑的表空间中，这个表空间就像黑盒一样由InnoDB存储引擎自身进行管理。InnoDB通过使用多版本并发控制（MVCC）来获得高并发性，并且实现了SQL标准的4种隔离级别，默认为REPEATABLE级别。同时，使用一种被称为next-keylocking的策略来避免幻读现象的产生。还提供了插入缓冲、二次写、自适应哈希索引、预读等高性能和高可用的功能。</p>
+<p>对于表中数据的存储，InnoDB存储引擎采用了聚集的方式，因为每张表的存储都是按逐渐的顺序进行存放。如果没有显式的在表定义时指定主键，InnoDB存储引擎会为每一行生成一个6字节的ROWID，并以此作为主键。</p>
+<h4 id="MyISAM存储引擎"><a href="#MyISAM存储引擎" class="headerlink" title="MyISAM存储引擎"></a>MyISAM存储引擎</h4><p>MyISAM存储引擎不支持事务、表锁设计，支持全文索引，主要面向一些OLAP数据库应用。</p>
+<p>MyISAM存储引擎的缓冲池只缓冲(cache)索引文件，而不缓冲数据文件，数据文件交由操作系统本身完成，这点与大多数数据库都非常不同。</p>
+<p>MyISAM存储引擎表由MYD和MYI组成，MYD用来存放数据文件，MYI用来存放索引文件。</p>
+<h4 id="NDB存储引擎"><a href="#NDB存储引擎" class="headerlink" title="NDB存储引擎"></a>NDB存储引擎</h4><p>NDB存储引擎是一个集群存储引擎，其结构式share nothing的集群架构，因此能提供更高的可用性。</p>
+<p>NDB存储引擎的特点是数据全部放在内存中（从Mysql 5.1开始，可以将非索引数据放到磁盘上），因此主键查找的速度极快，并且通过添加NDB数据存储节点(Data Node)可以线性的提高数据库性能，是高可用、高性能的集群系统。</p>
+<p>NDB存储引擎的连接操作(JOIN)是在MySQL数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此查询速度很慢。</p>
+<h4 id="Memory存储引擎"><a href="#Memory存储引擎" class="headerlink" title="Memory存储引擎"></a>Memory存储引擎</h4><p>Memory存储引擎将表中的数据存放在内存中，如果数据库重启或发生崩溃，表中数据都将消失。非常适合存储临时数据的临时表，以及数据仓库的纬度表。Memory存储引擎默认使用哈希索引，而不是B+树索引。</p>
+<p>Memory存储引擎只支持表锁，并发性能差，不支持TEXT和BLOB列类型。存储定长字段(varchar)时是按照定长字段(char)的方式进行的，因此会浪费内存。</p>
+<p>MySQL数据库使用Memory存储引擎作为临时表来存放查询的中间结果集。如果中间结果集大于Memory存储引擎表的容量设置，又或者中间结果包含TEXT和BLOB列类型字段，则MySQL数据库会把其转换到MyISAM存储引擎边儿存放到磁盘中。因为MyISAM存储引擎不缓存数据文件，因此产生的临时表的性能对于查询会有损失。</p>
+<h4 id="Archive存储引擎"><a href="#Archive存储引擎" class="headerlink" title="Archive存储引擎"></a>Archive存储引擎</h4><p>Archive存储引擎只支持INSERT和SELECT操作。</p>
+<p>非常适合存储归档数据</p>
+<p>其本身并不是事务安全的存储引擎，其设计目标主要是提供高速的插入和压缩功能。</p>
+<h4 id="Federated存储引擎"><a href="#Federated存储引擎" class="headerlink" title="Federated存储引擎"></a>Federated存储引擎</h4><p>不存放数据，只是指向一台远程MySQL数据库服务器上的表。</p>
+<h4 id="Maria存储引擎"><a href="#Maria存储引擎" class="headerlink" title="Maria存储引擎"></a>Maria存储引擎</h4><p>设计目标是要来取代MyISAM存储引擎，从而成为MySQL的默认引擎。</p>
+<p>特点是：支持缓存数据和索引文件，应用了行锁设计，提供了MVCC功能，支持事务和非事务安全的选项，以及更好的BLOB字符类型的处理性能。</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ul>
+<li><p>为什么MySQL数据库不支持全文索引？</p>
+<p>  不，MySQL支持，MyISAM、InnoDB(1.2版本)和Sphinx存储引擎都支持全文索引。</p>
+</li>
+<li><p>MySQL数据库速度快是因为不支持事务？<br>  错！虽然MySQL的MyISAM存储引擎不支持事务，但是InnoDB支持。”快”是相对于不同应用来说的，对于ETL这种操作，MyISAM会有其优势，但在OLTP环境中，InnoDB存储引擎的效率更好。</p>
+</li>
+<li>当表的数据量大于1000万时MySQL的性能会急剧下降吗？<br>  不！MySQL是数据库，不是文件，随着数据行数的增加，性能当然会有所下降，但是这些下降不是线性的，如果用户选择了正确的存储引擎，以及正确的配置，再多的数据量，MySQL也能承受。</li>
+</ul>
+<h3 id="连接MySQL"><a href="#连接MySQL" class="headerlink" title="连接MySQL"></a>连接MySQL</h3><h4 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h4><p>在TCP/IP连接上接力一个基于网络的连接请求，一般情况下客户端(client)在一台服务器上，而MySQL实例(server)在另外一台服务器上，这两台机器通过一个TCP/IP网络连接。</p>
+<p>在通过TCP/IP连接到MySQL实例时，MySQL数据库会先检查一张权限试图，用来判断发起请求的客户端IP是否允许连接到MySQL实例。</p>
+<h4 id="命名管道和共享内存"><a href="#命名管道和共享内存" class="headerlink" title="命名管道和共享内存"></a>命名管道和共享内存</h4><p>在Windows的平台上，如果两个需要进程通信的进程在同一台服务器上，那么可以使用命名管道。在MySQL数据库中虚在配置文件中启用–enable-named-pipe选项。</p>
+<p>在4.1之后版本中，MySQL还提供了共享内存的连接方式。</p>
+<h4 id="UNIX域套现字"><a href="#UNIX域套现字" class="headerlink" title="UNIX域套现字"></a>UNIX域套现字</h4><p>可以在Linux和UNIX环境下使用。</p>
+<p>应为域套现字不是网络协议，所以只能在客户端和数据库实例在一台服务器上的情况下使用。</p>
+<p>用户可以在配置文件中指定套现字文件的路径。</p>
 
           
         
