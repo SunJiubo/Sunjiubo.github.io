@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang>
+<html class="theme-next gemini use-motion" lang>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="SQL基础语法 基础模式定义了数据如何存储、存储什么样的数据以及数据如何分解等信息，数据库都有模式。 主键的值不允许修改，也不允许复用（不能使用已经删除的主键值赋给新数据行的主键）。 SQL（Structured Query Language)，标准 SQL 由 ANSI 标准委员会管理，从而称为 ANSI SQL。各个 DBMS 都有自己的实现，如 PL/SQL、Transact-SQL 等。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T09:01:50.268Z">
+<meta property="og:updated_time" content="2019-04-12T13:00:25.442Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL基础语法">
 <meta name="twitter:description" content="SQL基础语法 基础模式定义了数据如何存储、存储什么样的数据以及数据如何分解等信息，数据库都有模式。 主键的值不允许修改，也不允许复用（不能使用已经删除的主键值赋给新数据行的主键）。 SQL（Structured Query Language)，标准 SQL 由 ANSI 标准委员会管理，从而称为 ANSI SQL。各个 DBMS 都有自己的实现，如 PL/SQL、Transact-SQL 等。">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -303,7 +303,7 @@
 <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>模式定义了数据如何存储、存储什么样的数据以及数据如何分解等信息，数据库都有模式。</p>
 <p>主键的值不允许修改，也不允许复用（不能使用已经删除的主键值赋给新数据行的主键）。</p>
 <p>SQL（Structured Query Language)，标准 SQL 由 ANSI 标准委员会管理，从而称为 ANSI SQL。各个 DBMS 都有自己的实现，如 PL/SQL、Transact-SQL 等。</p>
-<p>SQL语句不区分大小写，但是数据库名、列名和值是否区分依赖于具体的DBMS以及配置。</p>
+<p>SQL语句不区分大小写，但是数据库名、列名和值是否区分依赖于具体的DBMS以及配置。<br><a id="more"></a></p>
 <h3 id="SQL支持以下三种注释"><a href="#SQL支持以下三种注释" class="headerlink" title="SQL支持以下三种注释"></a>SQL支持以下三种注释</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#注释</span></span><br><span class="line">SELECT *</span><br><span class="line">FROM mytable; -- 注释</span><br><span class="line">/* 注释1</span><br><span class="line">   注释2 */</span><br></pre></td></tr></table></figure>
 <h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* Windows服务 */</span><br><span class="line">-- 启动MySQL</span><br><span class="line">    net start mysql</span><br><span class="line">-- 创建Windows服务</span><br><span class="line">    sc create mysql binPath= mysqld_bin_path(注意：等号与值之间有空格)</span><br><span class="line">/* 连接与断开服务器 */</span><br><span class="line">mysql -h 地址 -P 端口 -u 用户名 -p 密码</span><br><span class="line">SHOW PROCESSLIST -- 显示哪些线程正在运行</span><br><span class="line">SHOW VARIABLES -- 显示系统变量信息</span><br></pre></td></tr></table></figure>
 <h3 id="数据库操作："><a href="#数据库操作：" class="headerlink" title="数据库操作："></a>数据库操作：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">--查看当前数据库</span><br><span class="line">	SELECT DATABASE();</span><br><span class="line">--显示当前时间、用户名、数据库版本</span><br><span class="line">	SELECT now(),user(),version();</span><br><span class="line">--创建库</span><br><span class="line">	CREATE DATEBASE[IF NOT EXISTS] 数据库名 数据库选项</span><br><span class="line">	数据库选项：</span><br><span class="line">		CHARACTER SET charset_name</span><br><span class="line">		COLLATE collation_name</span><br><span class="line">--查看已有库</span><br><span class="line">	SHOW DATABASES[ LIKE <span class="string">'PATTERN'</span>]</span><br><span class="line">-- 查看当前库信息</span><br><span class="line">    SHOW CREATE DATABASE 数据库名</span><br><span class="line">-- 修改库的选项信息</span><br><span class="line">    ALTER DATABASE 库名 选项信息</span><br><span class="line">-- 删除库</span><br><span class="line">    DROP DATABASE[ IF EXISTS] 数据库名</span><br><span class="line">        同时删除该数据库相关的目录及其目录内容</span><br></pre></td></tr></table></figure>
@@ -350,8 +350,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" rel="prev" title="MySQL技术内幕--第1章 MySQL体系结构和存储引擎">
-                MySQL技术内幕--第1章 MySQL体系结构和存储引擎 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/04/面试题/" rel="prev" title="牛客网面试题-第一周">
+                牛客网面试题-第一周 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -504,7 +504,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 

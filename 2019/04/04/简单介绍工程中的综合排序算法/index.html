@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang>
+<html class="theme-next gemini use-motion" lang>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可  如果数组长度很短，用插入排序，虽然插入排序是O(n^2)的方法，但是他常数项极地，">
+<meta name="description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单介绍工程中的综合排序算法">
 <meta property="og:url" content="https://SunJiubo.github.io/2019/04/04/简单介绍工程中的综合排序算法/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可  如果数组长度很短，用插入排序，虽然插入排序是O(n^2)的方法，但是他常数项极地，">
+<meta property="og:description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T09:01:50.223Z">
+<meta property="og:updated_time" content="2019-04-12T13:00:37.608Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单介绍工程中的综合排序算法">
-<meta name="twitter:description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可  如果数组长度很短，用插入排序，虽然插入排序是O(n^2)的方法，但是他常数项极地，">
+<meta name="twitter:description" content="简单介绍工程中的综合排序算法如果数组长度很长，根据数组元素的类型进行选择  基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排 用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可">
 
 
 
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -302,9 +302,9 @@
         <h2 id="简单介绍工程中的综合排序算法"><a href="#简单介绍工程中的综合排序算法" class="headerlink" title="简单介绍工程中的综合排序算法"></a>简单介绍工程中的综合排序算法</h2><p>如果数组长度很长，根据数组元素的类型进行选择</p>
 <ul>
 <li>基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排</li>
-<li>用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可</li>
+<li>用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可<a id="more"></a>
+如果数组长度很短，用插入排序，虽然插入排序是O(n^2)的方法，但是他常数项极地，在样本量很小的情况下，就是拼常数项，所以小样本情况下，插排飞快。</li>
 </ul>
-<p>如果数组长度很短，用插入排序，虽然插入排序是O(n^2)的方法，但是他常数项极地，在样本量很小的情况下，就是拼常数项，所以小样本情况下，插排飞快。</p>
 <p>所以有一种说法是，当长度小于60的时候，用插入排序。</p>
 <p>整体来说的话，如果长度很长的数组，数组元素是用户自己定义的类型，先用归并排序，但是最后的递归的终止条件变成了当长度小于60或者设定的阈值的时候，进行插排。</p>
 
@@ -340,6 +340,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" rel="prev" title="MySQL技术内幕--第1章 MySQL体系结构和存储引擎">
+                MySQL技术内幕--第1章 MySQL体系结构和存储引擎 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -491,7 +495,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 

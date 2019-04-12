@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang>
+<html class="theme-next gemini use-motion" lang>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="第1章 MySQL体系结构和存储引擎MySQL体系结构概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合； 数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。 MySQL由以下几部分组成  连接池组件">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-09T13:37:44.424Z">
+<meta property="og:updated_time" content="2019-04-12T13:00:31.347Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL技术内幕--第1章 MySQL体系结构和存储引擎">
 <meta name="twitter:description" content="第1章 MySQL体系结构和存储引擎MySQL体系结构概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合； 数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。 MySQL由以下几部分组成  连接池组件">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -310,9 +310,9 @@
 <li>优化器组件</li>
 <li>缓冲组件</li>
 <li>插件式存储引擎</li>
-<li>物理文件</li>
+<li>物理文件<a id="more"></a>
+MySQL数据库区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySql插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身需要的，如SQK分析器和优化器等，而存储引擎是底层物理结构实现的，每个存储引擎开发者可以按照自己的意愿来开发。</li>
 </ul>
-<p>MySQL数据库区别于其他数据库的最重要的特点就是其插件式的表存储引擎。MySql插件式的存储引擎架构提供了一系列标准的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统本身需要的，如SQK分析器和优化器等，而存储引擎是底层物理结构实现的，每个存储引擎开发者可以按照自己的意愿来开发。</p>
 <p><code>需要特别注意的是，存储引擎是基于表的，而不是数据库。</code>所以在创建表时，后面要标注对应的引擎。</p>
 <h3 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h3><p>存储引擎的好处是，每个存储引擎都有各自的特点，能够根据具体的应用建立不同存储引擎表。而MySQL数据库的核心在于存储引擎。MySQL数据库是开源的，可以根据预定义的存储引擎接口编写自己的存储引擎。</p>
 <h4 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h4><p>InnoDB存储引擎支持失误，其设计目标主要面向在线事务处理(OLTP)的应用。其特点是行锁设计、支持外键，并支持类似于Oracle的非锁定读，即默认读取操作不会产生锁。</p>
@@ -372,8 +372,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/04/SQL基础语法/" rel="next" title="SQL基础语法">
-                <i class="fa fa-chevron-left"></i> SQL基础语法
+              <a href="/2019/04/04/简单介绍工程中的综合排序算法/" rel="next" title="简单介绍工程中的综合排序算法">
+                <i class="fa fa-chevron-left"></i> 简单介绍工程中的综合排序算法
               </a>
             
           </div>
@@ -381,10 +381,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/04/面试题/" rel="prev" title="牛客网面试题-第一周">
-                牛客网面试题-第一周 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -536,7 +532,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 
