@@ -239,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/第2章 InnoDB存储引擎/">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/第2章 InnoDB存储引擎/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="孙九博">
@@ -258,7 +258,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/04/13/第2章 InnoDB存储引擎/" itemprop="url">第2章 InnoDB存储引擎</a></h1>
+                <a class="post-title-link" href="/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/第2章 InnoDB存储引擎/" itemprop="url">第2章 InnoDB存储引擎</a></h1>
         
 
         <div class="post-meta">
@@ -309,23 +309,14 @@
 
       
         
-          
-            <h2 id="第2章-InnoDB存储引擎"><a href="#第2章-InnoDB存储引擎" class="headerlink" title="第2章 InnoDB存储引擎"></a>第2章 InnoDB存储引擎</h2><p>InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。</p>
-<h3 id="InnoDB存储引擎概述"><a href="#InnoDB存储引擎概述" class="headerlink" title="InnoDB存储引擎概述"></a>InnoDB存储引擎概述</h3><p>该存储引擎是第一个完整支持ACID事务的MySQL存储引擎，其特点是行锁设计，支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效的利用以及使用内存和CPU。</p>
-<p>InnoDB是一个高性能、高可用、高可扩展的存储引擎。</p>
-<h3 id="InnoDB存储引擎的版本"><a href="#InnoDB存储引擎的版本" class="headerlink" title="InnoDB存储引擎的版本"></a>InnoDB存储引擎的版本</h3><p>InnoDB Plugin增加了对于compress和dynamic页的支持，但是innoDB Plugin是不支持Linux Native AIO 功能的。</p>
-<p>由于不支持多回滚段，InnoDB Plugin支持的最大支持并发实物数量也被限制在1023。</p>
-<h3 id="InnoDB体系框架"><a href="#InnoDB体系框架" class="headerlink" title="InnoDB体系框架"></a>InnoDB体系框架</h3><p>下图中显示了InnoDB的存储应请的体系架构，从图中可见，I南农DB存储引擎有多个内存块，可以认为这些内存块组成了一个大的内存池，负责如下任务：</p>
-<ul>
-<li>维护所有进程/线程需要访问的多个内部数据结构</li>
-<li>缓存磁盘上的数据，方便快速的读取，同时在对磁盘文件的数据修改之前在这里缓存</li>
-<li>重做日志缓冲</li>
-<li>… …</li>
-</ul>
-<p>&lt;img src=”images/Mysql技术内幕/2/体系架构.jpg&gt;</p>
-<p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
-
-          
+          <h2 id="第2章-InnoDB存储引擎"><a href="#第2章-InnoDB存储引擎" class="headerlink" title="第2章 InnoDB存储引擎"></a>第2章 InnoDB存储引擎</h2><p>InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/第2章 InnoDB存储引擎/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -442,146 +433,10 @@
 
       
         
-          
-            <h1 id="Runnable和Callable的区别和联系"><a href="#Runnable和Callable的区别和联系" class="headerlink" title="Runnable和Callable的区别和联系"></a>Runnable和Callable的区别和联系</h1><p>Java多线程有两个重要的接口，Runnable和Callable，分别提供一个run方法和call方法，二者是有较大差异的。</p>
-<ol>
-<li>Runnable提供run方法，不会抛出异常，只能在run方法内部处理异常。Callable提供call方法，直接抛出Exception异常，也就是你不会因为call方法内部出现检查型异常而不知所措，完全可以抛出即可。</li>
-<li>Runnable的run方法无返回值，Callable的call方法提供返回值用来表示任务运行的结果</li>
-<li>Runnable可以作为Thread构造器的参数来开启新的线程，也可以通过线程池来执行，而Callable只能通过线程池执行。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/第1章 MySQL体系结构和存储引擎/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="孙九博">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/quan.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="NineBoy's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" itemprop="url">MySQL技术内幕--第1章 MySQL体系结构和存储引擎</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-04T09:30:19+08:00">
-                2019-04-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="第1章-MySQL体系结构和存储引擎"><a href="#第1章-MySQL体系结构和存储引擎" class="headerlink" title="第1章 MySQL体系结构和存储引擎"></a>第1章 MySQL体系结构和存储引擎</h2><h3 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h3><p>概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合；</p>
-<p>数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。</p>
-<p>MySQL由以下几部分组成</p>
-<ul>
-<li>连接池组件</li>
-<li>管理服务和工具组件</li>
-<li>SQL接口组件</li>
-<li>查询分析器组件</li>
-<li>优化器组件</li>
-<li>缓冲组件</li>
-<li>插件式存储引擎</li>
-<li>物理文件</li></ul>
+          <h1 id="Runnable和Callable的区别和联系"><a href="#Runnable和Callable的区别和联系" class="headerlink" title="Runnable和Callable的区别和联系"></a>Runnable和Callable的区别和联系</h1><p>Java多线程有两个重要的接口，Runnable和Callable，分别提供一个run方法和call方法，二者是有较大差异的。<br></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/04/04/第1章 MySQL体系结构和存储引擎/#more" rel="contents">
+            <a class="btn" href="/2019/04/13/Runnable和Callable的区别和联系/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -961,6 +816,141 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/04/04/SQL基础语法/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/Mysql技术内幕/第1章 MySQL体系结构和存储引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/quan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NineBoy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/04/Mysql技术内幕/第1章 MySQL体系结构和存储引擎/" itemprop="url">MySQL技术内幕--第1章 MySQL体系结构和存储引擎</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-04T09:30:19+08:00">
+                2019-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="第1章-MySQL体系结构和存储引擎"><a href="#第1章-MySQL体系结构和存储引擎" class="headerlink" title="第1章 MySQL体系结构和存储引擎"></a>第1章 MySQL体系结构和存储引擎</h2><h3 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h3><p>概念上说，数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器的数据集合；</p>
+<p>数据库实例时程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义、数据查询、数据维护、数据库运行控制等都是在数据库实例下进行的，应用程序只有通过数据库实例才能和数据库打交道。</p>
+<p>MySQL由以下几部分组成</p>
+<ul>
+<li>连接池组件</li>
+<li>管理服务和工具组件</li>
+<li>SQL接口组件</li>
+<li>查询分析器组件</li>
+<li>优化器组件</li>
+<li>缓冲组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li></ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/04/Mysql技术内幕/第1章 MySQL体系结构和存储引擎/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
