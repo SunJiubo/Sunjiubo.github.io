@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="牛客网面试题-第一周1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。 Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T14:06:18.589Z">
+<meta property="og:updated_time" content="2019-04-13T01:08:08.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="牛客网面试题-第一周">
 <meta name="twitter:description" content="牛客网面试题-第一周1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。 Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制">
@@ -344,6 +344,13 @@
 <h3 id="8、Java支持多继承吗？"><a href="#8、Java支持多继承吗？" class="headerlink" title="8、Java支持多继承吗？"></a>8、Java支持多继承吗？</h3><p>Java中的类不支持多继承，只支持单继承（即一个类只有一个父类）。但是Java中的接口支持多继承，即一个接口可以有多个父接口。（接口的作用是用来扩展对象的功能，一个子接口继承多个父接口，说明子接口扩展了多个功能，当类实现接口时，类就扩展了相应的功能）。</p>
 <h3 id="9、接口和抽象类的区别是什么？"><a href="#9、接口和抽象类的区别是什么？" class="headerlink" title="9、接口和抽象类的区别是什么？"></a>9、接口和抽象类的区别是什么？</h3><p>Java提供和支持创建抽象类和接口。它们的实现有共同特点，不同点在于：<br>接口中所有的方法隐含的都是抽象的。而抽象类则可以同时包含抽象和非抽象的方法；<br>类可以实现很多个接口，但是只能继承一个抽象类；<br>类可以不实现抽象类和接口中声明的所有抽象方法，当然，在这种情况下，这个类也必须生命成抽象的；<br>抽象类实现接口可以不实现其中的所有方法；<br>Java接口中声明的变量默认都是final的，抽象类可以包含非final的变量;<br>Java接口中的成员函数默认是public的，抽象类的成员函数可以是private,protected或者是public;<br>接口时绝对抽象的，不可以被实例化，抽象类也不可以被实例化；</p>
 <h3 id="10、什么是值传递和引用传递？"><a href="#10、什么是值传递和引用传递？" class="headerlink" title="10、什么是值传递和引用传递？"></a>10、什么是值传递和引用传递？</h3><p>值传递是对基础类型变量而言，传递的是该变量的一个副本，改变副本不影响原变量。<br>引用传递一般是对象型变量而言的，传递的是该对象地址的一个副本，并不是原对象本身。<br>一般认为，Java内的基础类型数据传递的都是值传递，实例对象的传递是引用传递。</p>
+<h3 id="11、进程和线程的区别是什么？"><a href="#11、进程和线程的区别是什么？" class="headerlink" title="11、进程和线程的区别是什么？"></a>11、进程和线程的区别是什么？</h3><p>晋城市执行者的应用程序，线程时进程内部的一个执行序列。一个进程可以有多个线程。线程又称为轻量级进程。<br>线程与进程的区别归纳：</p>
+<ul>
+<li>地址空间和其他资源：进程相互独立，同一进程的各线程间共享。某进程内的线程其他进程看不见</li>
+<li>通信：进程间通信IPC，线程间可以直接读写进程数据段（如全局变量）来进行通信——需要进程同步和互斥手段的辅助，以保证数据的一致性</li>
+<li>调度和切换：线程上下文切换比进程上下文切换要快得多</li>
+<li>在多线程OS中，进程不是一个可执行的实体</li>
+</ul>
 
       
     </div>
@@ -378,8 +385,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/04/04/简单介绍工程中的综合排序算法/" rel="prev" title="简单介绍工程中的综合排序算法">
-                简单介绍工程中的综合排序算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/04/第1章 MySQL体系结构和存储引擎/" rel="prev" title="MySQL技术内幕--第1章 MySQL体系结构和存储引擎">
+                MySQL技术内幕--第1章 MySQL体系结构和存储引擎 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -494,7 +501,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#牛客网面试题-第一周"><span class="nav-number">1.</span> <span class="nav-text">牛客网面试题-第一周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"><span class="nav-number">1.1.</span> <span class="nav-text">1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、JDK和JRE的区别是什么？"><span class="nav-number">1.2.</span> <span class="nav-text">2、JDK和JRE的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、”static”关键字是什么意思？Java中是否可以覆盖-override-一个private或者是static的方法？"><span class="nav-number">1.3.</span> <span class="nav-text">3、”static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、是否可以在static环境中访问非static变量？"><span class="nav-number">1.4.</span> <span class="nav-text">4、是否可以在static环境中访问非static变量？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、Java支持的数据类型有哪些？什么是自动拆装箱？"><span class="nav-number">1.5.</span> <span class="nav-text">5、Java支持的数据类型有哪些？什么是自动拆装箱？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、Java中的方法覆盖-Overriding-和方法重载-Overload-是什么意思？"><span class="nav-number">1.6.</span> <span class="nav-text">6、Java中的方法覆盖(Overriding)和方法重载(Overload)是什么意思？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？"><span class="nav-number">1.7.</span> <span class="nav-text">7、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、Java支持多继承吗？"><span class="nav-number">1.8.</span> <span class="nav-text">8、Java支持多继承吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、接口和抽象类的区别是什么？"><span class="nav-number">1.9.</span> <span class="nav-text">9、接口和抽象类的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10、什么是值传递和引用传递？"><span class="nav-number">1.10.</span> <span class="nav-text">10、什么是值传递和引用传递？</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#牛客网面试题-第一周"><span class="nav-number">1.</span> <span class="nav-text">牛客网面试题-第一周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"><span class="nav-number">1.1.</span> <span class="nav-text">1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、JDK和JRE的区别是什么？"><span class="nav-number">1.2.</span> <span class="nav-text">2、JDK和JRE的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、”static”关键字是什么意思？Java中是否可以覆盖-override-一个private或者是static的方法？"><span class="nav-number">1.3.</span> <span class="nav-text">3、”static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、是否可以在static环境中访问非static变量？"><span class="nav-number">1.4.</span> <span class="nav-text">4、是否可以在static环境中访问非static变量？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、Java支持的数据类型有哪些？什么是自动拆装箱？"><span class="nav-number">1.5.</span> <span class="nav-text">5、Java支持的数据类型有哪些？什么是自动拆装箱？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、Java中的方法覆盖-Overriding-和方法重载-Overload-是什么意思？"><span class="nav-number">1.6.</span> <span class="nav-text">6、Java中的方法覆盖(Overriding)和方法重载(Overload)是什么意思？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？"><span class="nav-number">1.7.</span> <span class="nav-text">7、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、Java支持多继承吗？"><span class="nav-number">1.8.</span> <span class="nav-text">8、Java支持多继承吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、接口和抽象类的区别是什么？"><span class="nav-number">1.9.</span> <span class="nav-text">9、接口和抽象类的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10、什么是值传递和引用传递？"><span class="nav-number">1.10.</span> <span class="nav-text">10、什么是值传递和引用传递？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11、进程和线程的区别是什么？"><span class="nav-number">1.11.</span> <span class="nav-text">11、进程和线程的区别是什么？</span></a></li></ol></li></ol></div>
             
 
           </div>
