@@ -322,7 +322,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p>&lt;img src=”img/体系架构.jpg&gt;</p>
+<p>&lt;img src=”images/Mysql技术内幕/2/体系架构.jpg&gt;</p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 
           
@@ -578,7 +578,7 @@
 <li>优化器组件</li>
 <li>缓冲组件</li>
 <li>插件式存储引擎</li>
-<li>物理文件
+<li>物理文件</li></ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/04/04/第1章 MySQL体系结构和存储引擎/#more" rel="contents">
@@ -588,7 +588,7 @@
           <!--/noindex-->
         
       
-    </li></ul></div>
+    </div>
     
     
     
@@ -705,7 +705,7 @@
           <h2 id="简单介绍工程中的综合排序算法"><a href="#简单介绍工程中的综合排序算法" class="headerlink" title="简单介绍工程中的综合排序算法"></a>简单介绍工程中的综合排序算法</h2><p>如果数组长度很长，根据数组元素的类型进行选择</p>
 <ul>
 <li>基础类型，如double、int、char等等，选择快速排序，因为基本类型相同值无差异，所以可以使用快排</li>
-<li>用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可
+<li>用户自己定义的类型，如学生的成绩，或者其他属性等等，就要使用归并排序，因为归并排序可以实现稳定性，只要遇到相同的值，先排左边的值即可</li></ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/04/04/简单介绍工程中的综合排序算法/#more" rel="contents">
@@ -715,7 +715,7 @@
           <!--/noindex-->
         
       
-    </li></ul></div>
+    </div>
     
     
     
@@ -830,7 +830,7 @@
       
         
           <h2 id="牛客网面试题-第一周"><a href="#牛客网面试题-第一周" class="headerlink" title="牛客网面试题-第一周"></a>牛客网面试题-第一周</h2><h3 id="1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"><a href="#1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？" class="headerlink" title="1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？"></a>1、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？</h3><p>Java虚拟机是一个可以执行Java字节码的虚拟机进程。Java源文件被编译成能被Java虚拟机执行的字节码文件。</p>
-<p>Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.class字节码文件（java的跨平台指的就是.class字节码文件的跨平台，.class字节码文件是与平台无关的），.class文件再运行在jvm上，Java解释器（jvm的一部分）会将其解释成对应平台的机器码执行，所以Java所谓的跨平台就是在不同平台上安装了不同的jvm，而在不同平台上生成的.class文件都是一样的，而.class文件再由对应平台的jvm解释成对应平台的机器码执行。Java虚拟机让这个变成可能，因为他知道底层硬件平台的指令长度和其他特性。<br>
+<p>Java被设计成允许应用程序可以运行在任意的平台，而不需要程序员为每一个平台单独重写或者重新编译。Java的跨平台不是Java源程序的跨平台 ，java源程序先经过javac编译器编译成二进制的.class字节码文件（java的跨平台指的就是.class字节码文件的跨平台，.class字节码文件是与平台无关的），.class文件再运行在jvm上，Java解释器（jvm的一部分）会将其解释成对应平台的机器码执行，所以Java所谓的跨平台就是在不同平台上安装了不同的jvm，而在不同平台上生成的.class文件都是一样的，而.class文件再由对应平台的jvm解释成对应平台的机器码执行。Java虚拟机让这个变成可能，因为他知道底层硬件平台的指令长度和其他特性。<br></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/04/04/面试题第一周/#more" rel="contents">
@@ -840,7 +840,7 @@
           <!--/noindex-->
         
       
-    </p></div>
+    </div>
     
     
     
@@ -957,7 +957,7 @@
           <h2 id="SQL基础语法"><a href="#SQL基础语法" class="headerlink" title="SQL基础语法"></a>SQL基础语法</h2><p>模式定义了数据如何存储、存储什么样的数据以及数据如何分解等信息，数据库都有模式。</p>
 <p>主键的值不允许修改，也不允许复用（不能使用已经删除的主键值赋给新数据行的主键）。</p>
 <p>SQL（Structured Query Language)，标准 SQL 由 ANSI 标准委员会管理，从而称为 ANSI SQL。各个 DBMS 都有自己的实现，如 PL/SQL、Transact-SQL 等。</p>
-<p>SQL语句不区分大小写，但是数据库名、列名和值是否区分依赖于具体的DBMS以及配置。<br>
+<p>SQL语句不区分大小写，但是数据库名、列名和值是否区分依赖于具体的DBMS以及配置。<br></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/04/04/SQL基础语法/#more" rel="contents">
@@ -967,7 +967,7 @@
           <!--/noindex-->
         
       
-    </p></div>
+    </div>
     
     
     

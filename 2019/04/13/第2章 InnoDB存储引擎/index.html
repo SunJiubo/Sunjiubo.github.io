@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。 InnoDB存储引擎概述该存储引擎是第一个完整支持ACID事务的MySQL存储引擎，其特点是行锁设计，支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效的利用以及使用内存和CPU。 InnoDB是一个">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-13T14:12:38.756Z">
+<meta property="og:updated_time" content="2019-04-13T14:14:11.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。 InnoDB存储引擎概述该存储引擎是第一个完整支持ACID事务的MySQL存储引擎，其特点是行锁设计，支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效的利用以及使用内存和CPU。 InnoDB是一个">
@@ -321,7 +321,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p>&lt;img src=”img/体系架构.jpg&gt;</p>
+<p>&lt;img src=”images/Mysql技术内幕/2/体系架构.jpg&gt;</p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 
       
