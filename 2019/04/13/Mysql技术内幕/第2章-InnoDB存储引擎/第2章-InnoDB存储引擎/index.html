@@ -82,16 +82,16 @@
 <meta name="description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第2章 InnoDB存储引擎">
-<meta property="og:url" content="https://SunJiubo.github.io/2019/04/13/第2章-InnoDB存储引擎/index.html">
+<meta property="og:url" content="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/第2章-InnoDB存储引擎/存储引擎.jpg">
+<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
 <meta property="og:updated_time" content="2019-04-13T14:26:31.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
-<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/第2章-InnoDB存储引擎/存储引擎.jpg">
+<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
 
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/13/第2章-InnoDB存储引擎/">
+  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/">
 
 
 
@@ -244,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/第2章-InnoDB存储引擎/">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="孙九博">
@@ -323,7 +323,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p><img src="/2019/04/13/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
+<p><img src="/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 
       
