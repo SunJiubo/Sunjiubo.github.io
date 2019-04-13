@@ -229,6 +229,131 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/Runnable和Callable的区别和联系/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/quan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NineBoy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/13/Runnable和Callable的区别和联系/" itemprop="url">Runnable和Callable的区别和联系</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-13T21:14:00+08:00">
+                2019-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Runnable和Callable的区别和联系"><a href="#Runnable和Callable的区别和联系" class="headerlink" title="Runnable和Callable的区别和联系"></a>Runnable和Callable的区别和联系</h1><p>Java多线程有两个重要的接口，Runnable和Callable，分别提供一个run方法和call方法，二者是有较大差异的。</p>
+<ol>
+<li>Runnable提供run方法，不会抛出异常，只能在run方法内部处理异常。Callable提供call方法，直接抛出Exception异常，也就是你不会因为call方法内部出现检查型异常而不知所措，完全可以抛出即可。</li>
+<li>Runnable的run方法无返回值，Callable的call方法提供返回值用来表示任务运行的结果</li>
+<li>Runnable可以作为Thread构造器的参数来开启新的线程，也可以通过线程池来执行，而Callable只能通过线程池执行。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/04/第1章 MySQL体系结构和存储引擎/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -778,7 +903,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
