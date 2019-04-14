@@ -87,7 +87,8 @@
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg">
-<meta property="og:updated_time" content="2019-04-13T14:40:24.851Z">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1375201/201811/1375201-20181111132246042-1118656343.jpg">
+<meta property="og:updated_time" content="2019-04-14T12:15:12.060Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
@@ -323,7 +324,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p><img src="/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
+<p><img src="/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"><br><img src="https://img2018.cnblogs.com/blog/1375201/201811/1375201-20181111132246042-1118656343.jpg" alt="InnoDB体系框架"><br><a href="https://img2018.cnblogs.com/blog/1375201/201811/1375201-20181111132246042-1118656343.jpg" target="_blank" rel="noopener">InnoDB体系框架</a></p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 <h4 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h4><p>InnoDB存储引擎是多线程的模型，因此其后台有多个不同的后台线程，负责处理不同的任务。</p>
 <ol>
@@ -337,6 +338,21 @@
 <p>1.0版本之前有4个IO Thread：write、read、insert buffer、log IO Thread<br>Linux下 IO Thread数量不能调整，windows可以</p>
 <p>1.0之后，read和write thread分别增加到4个，使用innodb_read_io_threads、innodb_write_io_threads设置</p>
 <p>读线程的ID总是小于写线程</p>
+<ol start="3">
+<li>Purge Thread<br>Purge Thread用来回收已经使用并分配的undo页。</li>
+</ol>
+<p>1.1之前，purge操作尽在master Thread里完成<br>1.1之后，purge操作可以独立到单独线程完成，提高了CPU使用率以及提升存储引擎的性能<br>1.2之后，支持多个Purge Thread，目的进一步加快undo页的回收。由于Purge Thread需要离散地读取undo页，进一步利用磁盘的随机读取性能。</p>
+<ol start="4">
+<li>Page Cleaner Thread</li>
+</ol>
+<p>1.2后引入，作用是将之前版本中脏页的刷新操作都放入到单独的线程中完成。</p>
+<p>目的是为了减轻原Master Thread的工作对于用户查询线程的阻塞，进一步提升性能。</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><ol>
+<li>缓冲池</li>
+</ol>
+<p>InnoDB存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理。</p>
+<p>由于CPU速度与磁盘速度之间的鸿沟，基于磁盘的数据库系统通常使用缓冲池技术来提高数据库的整体性能。</p>
+<p>缓冲池是一块内存区域，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。在数据库中进行读取页的操作,首先将从磁盘读到的页存放在缓冲池中（这个过程称作FIX）,下一次读取相同的页时,首先判断该页是不是在缓冲池中,若在,称该页在缓冲池中被命中,直接读取该页。否则,读取磁盘上的页。</p>
 
       
     </div>
@@ -485,7 +501,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
