@@ -87,7 +87,7 @@
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg">
-<meta property="og:updated_time" content="2019-04-14T13:31:30.958Z">
+<meta property="og:updated_time" content="2019-04-15T14:28:37.868Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
@@ -392,7 +392,44 @@
 <li>额外的内存池</li>
 </ol>
 <p>在InnoDB存储引擎中，对内存的管理是通过一种称为内存堆的方式进行的。在对一些数据结构的内存进行分配时，需要从额外的内存池中进行申请，当该区域的内存不够时，会从缓冲池中进行申请。例如，分配了缓冲池（innodb_buffer_pool），但是每个缓冲池中的帧缓冲（frame buffer）还有对应的缓冲控制对象（buffer control block），这些对象记录了一些诸如LRU、锁、等待等信息，而这个对象的内存需要从额外内存池中申请。</p>
+<h3 id="Checkpoint技术"><a href="#Checkpoint技术" class="headerlink" title="Checkpoint技术"></a>Checkpoint技术</h3><p>为了避免发生数据丢失的问题，当前事务数据库系统普遍都采用了Write Ahead Log策略，即当事务提交时，先写重做日志，再修改页。当由于发生宕机而导致数据丢失时，通过重做日志来完成数据的恢复。这也是事务ACID中D（持久性）的要求。</p>
+<p>Checkpoint（检查点）技术的目的：</p>
+<pre><code>- 缩短数据库的恢复时间
+- 缓冲池不够用时，将脏页刷新到磁盘中
+- 重做日志不可用时，刷新脏页
+</code></pre><p>当数据库发生宕机时，数据库不需要重做所有的日志，因为Checkpoint之前的页都已经刷新回磁盘。故数据库只需对Checkpoint后的重做日志进行恢复。</p>
+<p>此外，当缓冲池不够用时，根据LRU算法会溢出最近最少使用的页，若此页为脏页，那么需要强制执行Checkpoint，将脏页也就是页的新版本刷回磁盘。</p>
+<p>重做日志可以被重用的部分是指这些重做日志已经不再需要，即当数据库发生宕机时，数据库恢复操作不需要这部分的重做日志，因此这部分就可以被覆盖重用。若此时重做日志还需要使用，那么必须强制产生Checkpoint，将缓冲池中的页至少刷新到当前重做日志的位置。</p>
+<p>在InnoDB存储引擎内部，有两种Checkpoint，分别为：</p>
+<pre><code>- Sharp Checkpoint
+- Fuzzy Checkpoint
+</code></pre><p>Sharp Checkpoint发生在<strong>数据库关闭</strong>时将所有的脏页都刷新回磁盘，这是默认的工作方式，即参数innodb_fast_shutdown=1。 故在InnoDB存储引擎内部使用Fuzzy Checkpoint进行页的刷新，即只刷新一部分脏页，而不是刷新所有的脏页回磁盘。 </p>
+<p> 在InnoDB存储引擎中可能发生如下几种情况的Fuzzy Checkpoint： </p>
+<pre><code>- Master Thread Checkpoint
+- FLUSH_LRU_LIST Checkpoint
+- Async/Sync Flush Checkpoint
+- Dirty Page too much Checkpoint
 
+- 对于Master Thread中发生的Checkpoint，差不多以每秒或每十秒的速度从缓冲池的脏页列表中刷新一定比例的页回磁盘。这个过程是异步的，即此时InnoDB存储引擎可以进行其他的操作，用户查询线程不会阻塞
+
+- FLUSH_LRU_LIST Checkpoint是因为InnoDB存储引擎需要保证LRU列表中需要有差不多100个空闲页可供使用。在InnoDB 1.1.x版本之前，需要检查LRU列表中是否有足够的可用空间操作发生在用户查询线程中，显然这会阻塞用户的查询操作。倘若没有100个可用空闲页，那么InnoDB会将列表尾端的页溢出，若其中有脏页，那么需要进行Checkpoint。
+而在MySQL 5.6版本，也就是InnoDB 1.2.x版本开始，这个检查被放在了一个单独的Page Cleaner线程中进行，并且用户可以通过参数innodb_lru_scan_depth控制LRU列表中可用页的数量，该值默认为1024。
+
+- Async/Sync Flush Checkpoint指的是重做日志文件不可用的情况，这时需要强制将一些页刷新回磁盘，而此时脏页是从脏页列表中选取的。若将已经写入重做日志的LSN即为redo_lsn,将已经刷新回磁盘最新页的LSN记为checkpoint_lsn，则可定义： 
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checkpoint_age = redo_lsn - checkpoint_lsn</span><br></pre></td></tr></table></figure>
+
+在定义
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">async_water_mark = 75% * total_redo_log_file_size</span><br><span class="line">sync_water_mark = 90% * total_redo_log_file_size</span><br></pre></td></tr></table></figure>
+
+若每个重做日志文件的大小为1GB，并且定义了两个重做日志文件，则重做日志文件的总大小为2GB。那么async_water_mark=1.5GB，sync_water_mark=1.8GB。则 
+- 当checkpoint_age &lt; async_water_mark时，不需要刷新任何脏页到磁盘；
+- 当async_water_mark &lt; checkpoint_age &lt; sync_water_mark时触发Async Flush，从Flush列表中刷新足够的脏页回磁盘，使得刷新后满足checkpoint_age &lt; async_water_mark；
+- checkpoint_age &gt; sync_water_mark这种情况很少发生，除非设置的重做日志文件太小，并且在进行类似LOAD DATA的BULK INSERT操作。此时触发Sync Flush操作，从Flush列表中刷新足够的脏页回磁盘，使得刷新后满足checkpoint_age &lt; async_water_mark。
+
+Async/Sync Flush Checkpoint是为了保证重做日志的循环使用的可用性。在InnoDB 1.2.x版本之前，Async Flush Checkpoint会阻塞发现问题的用户查询线程，而Sync Flush Checkpoint会阻塞所有的用户查询线程，并且等待脏页刷新完成。从InnoDB 1.2.x版本开始——也就是MySQL 5.6版本，这部分的刷新操作同样放入到了单独的Page Cleaner Thread中，故不会阻塞用户查询线程。
+
+最后一种是Dirty Page too mach,即脏页的数量太多，导致InnoDB引擎强制进行Checkpoint。目的还是保证缓冲池中有足够可用的页。 innodb_max_dirty_pages_pct值为75表示，当缓冲池中脏页的数量占据75%时，强制执行Checkpoint，刷新一部分的脏页到磁盘。 
+</code></pre>
       
     </div>
     
@@ -425,6 +462,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/15/面试题/面试题第二周/" rel="prev" title="面试题第二周">
+                面试题第二周 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -503,7 +544,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -540,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkpoint技术"><span class="nav-number">1.4.</span> <span class="nav-text">Checkpoint技术</span></a></li></ol></li></ol></div>
             
 
           </div>
