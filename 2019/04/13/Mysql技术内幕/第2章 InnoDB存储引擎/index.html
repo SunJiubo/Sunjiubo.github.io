@@ -82,16 +82,16 @@
 <meta name="description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第2章 InnoDB存储引擎">
-<meta property="og:url" content="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/index.html">
+<meta property="og:url" content="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg">
-<meta property="og:updated_time" content="2019-04-17T14:35:49.848Z">
+<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
+<meta property="og:updated_time" content="2019-04-18T12:58:36.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
-<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg">
+<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
 
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/">
+  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/">
 
 
 
@@ -244,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="孙九博">
@@ -323,7 +323,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p><img src="/2019/04/13/Mysql技术内幕/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
+<p><img src="/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 <h4 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h4><p>InnoDB存储引擎是多线程的模型，因此其后台有多个不同的后台线程，负责处理不同的任务。</p>
 <ol>
@@ -459,7 +459,73 @@ Async/Sync Flush Checkpoint是为了保证重做日志的循环使用的可用�
 <p>但是不可能每张表上只有一个聚集索引，更多情况下，一张表上有多个非聚集的辅助索引（secondary index）。比如，用户需要按照b这个字段进行查找，并且b这个字段不是唯一的，即表是按如下的SQL语句定义的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE t &#123;</span><br><span class="line">    a INT AUTO_INCREMENT,</span><br><span class="line">    b VARCHAR(30),</span><br><span class="line">    PRIMARY KEY(a),</span><br><span class="line">    key(b)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <p>在进行插入操作时，数据页的存放还是按主键a进行顺序存放的，但是对于非聚集索引叶子节点的插入不再是顺序的了，这时就需要离散地访问非聚集索引页，由于随机读取的存在而导致了插入操作性能下降。当然这并不是这个b字段上索引的错误，而是因为B+树的特性决定了非聚集索引插入的离散性。</p>
-<h2 id="InnoDB开创性地设计了Insert-Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert-Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert-Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。"><a href="#InnoDB开创性地设计了Insert-Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert-Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert-Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。" class="headerlink" title="InnoDB开创性地设计了Insert Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。"></a>InnoDB开创性地设计了Insert Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。</h2><p>作者：youngsend<br>来源：CSDN<br>原文：<a href="https://blog.csdn.net/youngsend/article/details/48606475" target="_blank" rel="noopener">https://blog.csdn.net/youngsend/article/details/48606475</a><br>版权声明：本文为博主原创文章，转载请附上博文链接！</p>
+<p>InnoDB开创性地设计了Insert Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。</p>
+<p>然而Insert Buffer的使用需要同时满足以下两个条件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">索引是辅助索引（secondary index）</span><br><span class="line">索引不是唯一（unique）的</span><br></pre></td></tr></table></figure>
+<p>辅助索引不能是唯一的，因为在插入缓冲时，数据库并不去查找索引页来判断插入的记录的唯一性。</p>
+<p>seg size显示了当前Insert Buffer的大小为11336×</p>
+<p>16KB，大约为177MB；free list len代表了空闲列表的长度；size代表了已经合并记录页的数量。</p>
+<p>Inserts代表了插入的记录数；merged recs代表了合并的插入记录数量；merges代表合并的次数，也就是实际读取页的次数。merges:merged recs大约为1：3，代表了插入缓冲将对于非聚集索引页的离散IO逻辑请求大约降低了2/3。</p>
+<p>正如前面所说的，目前Insert Buffer存在一个问题是：在写密集的情况下，插入缓冲会占用过多的缓冲池内存（innodb_buffer_pool），默认最大可以占用到1/2的缓冲池内存。</p>
+<ol start="2">
+<li>Change Buffer</li>
+</ol>
+<p>从这个版本开始，InnoDB存储引擎可以对DML操作——INSERT、DELETE、UPDATE都进行缓冲，他们分别是：Insert Buffer、Delete Buffer、Purge Buffer。</p>
+<p>当然和之前Insert Buffer一样，Change Buffer适用的对象依然是非唯一的辅助索引。</p>
+<p>因为Delete Buffer对应UPDATE操作的第一个过程，即将记录标记为删除。Purge Buffer对应UPDATE操作的第二个过程，即将记录真正的删除。</p>
+<p>innodb_change_buffer_max_size值默认为25，表示最多使用1/4的缓冲池内存空间。而需要注意的是，该参数的最大有效值为50。</p>
+<ol start="3">
+<li>Insert Buffer的内部实现</li>
+</ol>
+<p>Insert Buffer的数据结构是一棵B+树。在MySQL 4.1之前的版本中每张表有一棵Insert Buffer B+树。而在现在的版本中，全局只有一棵Insert Buffer B+树，负责对所有的表的辅助索引进行Insert Buffer。</p>
+<p>Insert Buffer 是一棵B+树，因此其他由叶节点和非叶节点组成。非叶节点存放的是查询的search key（键值），其构造是：<br>    | space | marker | offset |。</p>
+<p>search key一共占用9个字节，<strong>其中space表示待插入记录所在表的表空间id，在InnoDB存储引擎中，每个表有一个唯一的space id，可以通过space id查询得知是哪张表。</strong>space占用4字节。marker占用1字节，它是用来兼容老版本的Insert Buffer。offset表示页所在的偏移量，占用4字节。</p>
+<p>当一个辅助索引要插入到页（space, offset）时，如果这个页不在缓冲池中，那么InnoDB首先根据上述规则构造一个search key，接下来查询Insert Buffer这棵B+树，然后再将这条记录插入到Insert Buffer B+树的叶子节点中。</p>
+<p>IBUF_REC_OFFSET_COUNT是保存两个字节的整数，用来排序每个记录进入Insert Buffer的顺序。因为从InnoDB 1.0.x开始支持Change Buffer，所以这个值同样记录进入Change Buffer的顺序。通过这个顺序回放（replay）才能得到记录的正确值。</p>
+<p>从Insert Buffer叶子节点的第5列开始，就是实际插入记录的各个字段了。因此较之原插入记录，Insert Buffer B+树的叶子节点记录需要额外13字节的开销。</p>
+<p>因为启用Insert Buffer索引后，辅助索引页（space，page_no）中的记录可能被插入到Insert Buffer B+树中，所以为了保证每次Merge Insert Buffer页必须成功，还需要有一个特殊的页用来标记每个辅助索引页（space，page_no）的可用空间。这个页的类型为Insert Buffer Bitmap。</p>
+<p>每个Insert Buffer Bitmap页用来追踪16384个辅助索引页，也就是256个区（Extent）。每个Insert Buffer Bitmap页都在16384个页的第二个页中。每个辅助索引页在Insert Buffer Bitmap页中占用4位：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IBUF_BITMAP_FREE 2 表示该辅助索引页中的可用空间数量</span><br><span class="line">IBUF_BITMAP_BUFFERED 1 1表示该辅助索引页有记录被缓存在Insert Buffer B+树中</span><br><span class="line">IBUF_BITMAP_IBUF 1 1表示该页为Insert Buffer B+树的索引页</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>Merge Insert Buffer</li>
+</ol>
+<p>概括地说，Merge Insert Buffer的操作可能发生在以下几种情况下：</p>
+<pre><code>辅助索引页被读取到缓冲池时
+Insert Buffer Bitmap页追踪到该辅助索引页已无空间可用时
+Master Thread
+</code></pre><p><strong>第一种情况为当辅助索引页被读取到缓冲池中时，例如这在执行正常的SELECT查询操作，这时需要检查Insert Buffer Bitmap页，然后确认该辅助索引页是否有记录存放于Insert Buffer B+树中。若有，则将Insert Buffer B+树中该页的记录插入到该辅助索引页中。可以看到对该页多次的记录操作通过一次操作合并到了原有的辅助索引页中，因此性能会有大幅提高。</strong></p>
+<p> <strong>Insert Buffer Bitmap页用来追踪每个辅助索引页的可用空间，并至少有1/32页的空间。若插入辅助索引记录时检测到插入记录后可用空间会小于1/32页，则会强制进行一次合并操作，即强制读取辅助索引页，将Insert Buffer B+树种该页的记录及待插入的记录插入到辅助索引页中。</strong> </p>
+<h4 id="两次写"><a href="#两次写" class="headerlink" title="两次写"></a>两次写</h4><p>doublewrite由两部分组成，一部分是内存中的doublewrite buffer，大小为2MB，另一部分是物理磁盘上共享表空间中连续的128个页，即2个区（extent），大小同样为2MB。在对缓冲池的脏页进行刷新时，并不直接写磁盘，而是会通过memcpy函数将脏页先复制到内存中的doublewrite buffer，之后通过doublewrite buffer再分两次，每次1MB顺序地写入共享表空间的物理磁盘上，然后马上调用fsync函数，同步磁盘，避免缓冲写带来的问题。在这个过程中，因为doublewrite页是连续的，因此这个过程是顺序写的，开销并不是很大。在完成doublewrite页的写入后，再将doublewrite buffer中的页写入各个表空间文件中，此时的写入则是离散的。</p>
+<p>如果操作系统在将页写入磁盘的过程中发生了崩溃，在恢复过程中，InnoDB存储引擎可以从共享表空间中的doublewrite中找到该页的一个副本，将其复制到表空间文件，再应用重做日志。</p>
+<p>有些文件系统本身就提供了部分写失效的防范机制，如ZFS文件系统。在这种情况下，用户就不要启用doublewrite了。</p>
+<h4 id="自适应哈希索引"><a href="#自适应哈希索引" class="headerlink" title="自适应哈希索引"></a>自适应哈希索引</h4><p>哈希是一种非常快的查找方法，在一般情况下这种查找的时间复杂度为O(1)，即一般仅需要一次查找就能定位数据。</p>
+<p>而B+树的查找次数，取决于B+树的高度，在生产环境中，B+树的高度一般为3~4层，故需要3~4次查询。</p>
+<p>InnoDB会监控对表上各索引页的查询，如果观察到哈希索引可以带来速度提升，则建立哈希索引，称之为自适应哈希索引。</p>
+<p>InnoDB存储引擎会自动根据访问的频率和模式来自动地为某些热点页建立哈希索引。</p>
+<p>AHI有一个要求，即对这个页的连续访问模式必须是一样的。例如对于(a,b)这样的联合索引页，其访问模式可以是以下情况：<br>    where a= xxx<br>    where a=xxx and b = xxx</p>
+<p>访问模式一样是指查询的条件一样，若交替进行上述两种查询，呢么InnoDB存储引擎不会对该页构造AHI。</p>
+<p>此外AHI还有如下的要求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">以该模式访问了100次</span><br><span class="line">页通过该模式访问了N次，其中N=页中记录*1/16</span><br></pre></td></tr></table></figure></p>
+<p>启用AHI后读取和写入速度可以提高2倍，辅助索引的连接操作性能可以提升5倍。</p>
+<p>AHI是非常好的优化模式，其设计思想是数据库的自优化的，即无需DBA对数据库进行人为调整。</p>
+<p>默认AHI为开启状态</p>
+<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>为了提高磁盘操作性能，当前的数据库系统都采用异步IO(AIO)的方式来处理磁盘操作，InnoDB也是如此</p>
+<p>用户可以在发出一个IO请求后立即再发出另一个IO请求，当全部IO请求发送完毕后，等待所有IO操作的完成，这就是AIO。</p>
+<p>AIO的另一个优势是进行IO Merge操作，将多个IO合并为一个IO，这样可以提升IOPS的性能。而AIO会判断到这三个页是连续的（可以通过（space，page_no）得知）。因此AIO底层会发送一个IO请求，从（8，6）开始，读取48KB的页。</p>
+<p>在InnoDB1.1.x之前，AIO的实现通过InnoDB存储引擎中的代码来模拟实现。而从InnoDB1.1.x开始（InnoDB Plugin不支持），提供了内核级别的AIO的支持，称为Native AIO。因此在编译或者运行该版本MySQL时，需要libaio库的支持。</p>
+<p>Windows系统和Linux系统都提供Native AIO支持，而Mac OSX系统则未提供。</p>
+<p>参数innodb_use_native_aio用来控制是否启用Native AIO，在Linux操作系统下，默认值为ON。</p>
+<p>官方的测试显示，启用Native AIO，恢复速度可以提供75%。</p>
+<p>在InnoDB存储引擎中，read ahead方式的读取都是通过AIO完成，脏页的刷新，即磁盘的写入操作则全部由AIO完成。</p>
+<h4 id="刷新邻接页"><a href="#刷新邻接页" class="headerlink" title="刷新邻接页"></a>刷新邻接页</h4><p>其工作原理是：当刷新一个脏页时，InnoDB存储引擎会检测该页所在区（extent）的所有页，如果是脏页，那么一起进行刷新。这样做的好处显而易见，通过AIO可以将多个IO写入操作合并为一个IO操作，故该工作机制在传统机械磁盘下有着显著的优势。</p>
+<p>对于传统机械硬盘建议启用该特性，而对于固态硬盘有着超高的IOPS性能的磁盘，则建议将该参数设置为0，即关闭此特性。</p>
+<h3 id="启动、关闭与恢复"><a href="#启动、关闭与恢复" class="headerlink" title="启动、关闭与恢复"></a>启动、关闭与恢复</h3><p>在关闭时，参数innodb_fast_shutdown影响着表的存储引擎为InnoDB的行为。该参数可取值为0，1，2，默认值为1。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0表示在MySQL数据库关闭时，InnoDB需要完成所有的full purge和merge insert buffer，并且将所有的脏页刷新回磁盘。这需要一些时间，有时甚至需要几个小时来完成。如果在进行InnoDB升级时，必须将这个参数设置为0，然后再关闭数据库。</span><br><span class="line">1是参数innodb_fast_shutdown的默认值，表示不需要完成上述的full purge和merge insert buffer操作，但是在缓冲池中的一些数据脏页还是会刷新回磁盘。</span><br><span class="line">2表示不完成full purge和merge insert buffer操作，也不将缓冲池中的数据脏页写回磁盘，而是将日志都写入日志文件。这样不会有任何事务的丢失，但是下次MySQL数据库启动时，会进行恢复操作（recovery）。</span><br></pre></td></tr></table></figure>
+<p>当正常关闭MySQL数据库时，下次的启动应该会非常“正常”，但是如果没有正常地关闭数据库，如用kill命令关闭数据库，在MySQL数据库运行中重启了服务器，或者在关闭数据库时，将参数innodb_fast_shutdown设置我了2，下次数据库启动时会对InnoDB的表进行恢复操作。</p>
+<p>参数innodb_force_recovery影响了整个InnoDB存储引擎恢复的状况。该参数值默认为0，代表当发生需要恢复时，进行所有的恢复操作，当不能进行有效恢复时，如数据页发生了corruption，MySQL数据库可能发生宕机（crash），并把错误写入错误日志中去。</p>
+<p>参数innodb_force_recovery还可以设置为6个非零值：1~6。大的数字表示包含了前面所有小数字表示的影响：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1（SRV_FORCE_IGNORE_CORRUPT）：忽略检查到的corrupt页</span><br><span class="line">2（SRV_FORCE_NO_BACKGROUND）：阻止Master Thread线程的运行，如Master Thread线程需要进行full purge操作，而这会导致crash</span><br><span class="line">3（SRV_FORCE_NO_TRX_UNDO）：不进行事务的回滚操作</span><br><span class="line">4（SRV_FORCE_NO_IBUF_MERGE）：不进行插入缓冲的合并操作</span><br><span class="line">5（SRV_FORCE_NO_UNDO_LOG_SCAN）：不查看撤销日志（Undo Log），InnoDB存储引擎会将未提交的事务视为已提交。</span><br><span class="line">6（SRV_FROCE_NO_LOG_REDO）：不进行前滚的操作。</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是，在设置了参数innodb_force_recovery大于0后，用户可以对标进行select、create和drop操作，但insert、update和delete这类DML操作是不允许的。</p>
+<p> 模拟宕机后，可以看到，采用默认的策略，即将innodb_force_recovery设为0，InnoDB会在每次启动后对发生问题的表进行恢复操作。通过错误日志文件，可知这次回滚操作需要回滚8867280行记录，差不多总共进行了9分钟。 </p>
+<p>将innodb_force_recovery设置为3，然后进行上面的实验，这里出现了“！！！”，InnoDB警告已经将innodb_force_recovery设置为3，不会进行回滚操作了，因此数据库很快启动完了。但是用户应该小心当前数据库的状态，并仔细确认是否不需要回滚事务的操作。 </p>
 
       
     </div>
@@ -575,7 +641,7 @@ Async/Sync Flush Checkpoint是为了保证重做日志的循环使用的可用�
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -612,7 +678,7 @@ Async/Sync Flush Checkpoint是为了保证重做日志的循环使用的可用�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkpoint技术"><span class="nav-number">1.4.</span> <span class="nav-text">Checkpoint技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master-Thread工作方式"><span class="nav-number">1.5.</span> <span class="nav-text">Master Thread工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-0-x版本之前的Master-Thread"><span class="nav-number">1.5.1.</span> <span class="nav-text">InnoDB 1.0.x版本之前的Master Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-2-x版本之前的Master-Thread"><span class="nav-number">1.5.2.</span> <span class="nav-text">InnoDB 1.2.x版本之前的Master Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-2-x版本的Master-Thread"><span class="nav-number">1.5.3.</span> <span class="nav-text">InnoDB 1.2.x版本的Master Thread</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB关键特性"><span class="nav-number">1.6.</span> <span class="nav-text">InnoDB关键特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入缓冲"><span class="nav-number">1.6.1.</span> <span class="nav-text">插入缓冲</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB开创性地设计了Insert-Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert-Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert-Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。"><span class="nav-number">2.</span> <span class="nav-text">InnoDB开创性地设计了Insert Buffer，对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不在，则先放入到一个Insert Buffer对象中，好似欺骗。数据库这个非聚集的索引已经插入到叶子节点，而实际并没有，只是存放在另一个位置。然后再以一定的频率和情况进行Insert Buffer和辅助索引页子节点的merge操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入的性能。</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第2章-InnoDB存储引擎"><span class="nav-number">1.</span> <span class="nav-text">第2章 InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎的版本"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB存储引擎的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB体系框架"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB体系框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台线程"><span class="nav-number">1.3.1.</span> <span class="nav-text">后台线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkpoint技术"><span class="nav-number">1.4.</span> <span class="nav-text">Checkpoint技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master-Thread工作方式"><span class="nav-number">1.5.</span> <span class="nav-text">Master Thread工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-0-x版本之前的Master-Thread"><span class="nav-number">1.5.1.</span> <span class="nav-text">InnoDB 1.0.x版本之前的Master Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-2-x版本之前的Master-Thread"><span class="nav-number">1.5.2.</span> <span class="nav-text">InnoDB 1.2.x版本之前的Master Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-1-2-x版本的Master-Thread"><span class="nav-number">1.5.3.</span> <span class="nav-text">InnoDB 1.2.x版本的Master Thread</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB关键特性"><span class="nav-number">1.6.</span> <span class="nav-text">InnoDB关键特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入缓冲"><span class="nav-number">1.6.1.</span> <span class="nav-text">插入缓冲</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两次写"><span class="nav-number">1.6.2.</span> <span class="nav-text">两次写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自适应哈希索引"><span class="nav-number">1.6.3.</span> <span class="nav-text">自适应哈希索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步IO"><span class="nav-number">1.6.4.</span> <span class="nav-text">异步IO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#刷新邻接页"><span class="nav-number">1.6.5.</span> <span class="nav-text">刷新邻接页</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动、关闭与恢复"><span class="nav-number">1.7.</span> <span class="nav-text">启动、关闭与恢复</span></a></li></ol></li></ol></div>
             
 
           </div>
