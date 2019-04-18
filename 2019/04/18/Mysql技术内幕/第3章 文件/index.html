@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="第3章 文件参数文件：告诉MySQL实例启动时去哪里可以找到数据库文件，并且指定某些初始化参数，这些参数定义了某种内存结构的大小等设置，还会介绍各种参数的类型。 日志文件：用来记录MySQL实例对某种条件做出响应时写入的文件，如错误日志文件、二进制文件、慢查询日志文件、查询日志文件等。 socket文件：当使用UNIX域套接字方式进行连接时需要的文件 pid文件：MySQL实例的进程ID文件 My">
 <meta property="og:type" content="article">
-<meta property="og:title" content="文件">
+<meta property="og:title" content="第3章 文件">
 <meta property="og:url" content="https://SunJiubo.github.io/2019/04/18/Mysql技术内幕/第3章 文件/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
+<meta property="og:description" content="第3章 文件参数文件：告诉MySQL实例启动时去哪里可以找到数据库文件，并且指定某些初始化参数，这些参数定义了某种内存结构的大小等设置，还会介绍各种参数的类型。 日志文件：用来记录MySQL实例对某种条件做出响应时写入的文件，如错误日志文件、二进制文件、慢查询日志文件、查询日志文件等。 socket文件：当使用UNIX域套接字方式进行连接时需要的文件 pid文件：MySQL实例的进程ID文件 My">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-18T12:59:49.639Z">
+<meta property="og:updated_time" content="2019-04-18T14:28:28.744Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文件">
+<meta name="twitter:title" content="第3章 文件">
+<meta name="twitter:description" content="第3章 文件参数文件：告诉MySQL实例启动时去哪里可以找到数据库文件，并且指定某些初始化参数，这些参数定义了某种内存结构的大小等设置，还会介绍各种参数的类型。 日志文件：用来记录MySQL实例对某种条件做出响应时写入的文件，如错误日志文件、二进制文件、慢查询日志文件、查询日志文件等。 socket文件：当使用UNIX域套接字方式进行连接时需要的文件 pid文件：MySQL实例的进程ID文件 My">
 
 
 
@@ -122,7 +125,7 @@
 
 
 
-  <title>文件 | NineBoy's Blog</title>
+  <title>第3章 文件 | NineBoy's Blog</title>
   
 
 
@@ -256,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">文件</h1>
+          <h1 class="post-title" itemprop="name headline">第3章 文件</h1>
         
 
         <div class="post-meta">
@@ -306,7 +309,56 @@
       
 
       
-        
+        <h2 id="第3章-文件"><a href="#第3章-文件" class="headerlink" title="第3章 文件"></a>第3章 文件</h2><p>参数文件：告诉MySQL实例启动时去哪里可以找到数据库文件，并且指定某些初始化参数，这些参数定义了某种内存结构的大小等设置，还会介绍各种参数的类型。</p>
+<p>日志文件：用来记录MySQL实例对某种条件做出响应时写入的文件，如错误日志文件、二进制文件、慢查询日志文件、查询日志文件等。</p>
+<p>socket文件：当使用UNIX域套接字方式进行连接时需要的文件</p>
+<p>pid文件：MySQL实例的进程ID文件</p>
+<p>MySQL表结构文件：用来存放MySQL表结构定义文件</p>
+<p>存储引擎文件：因为MySQL表存储引擎的关系，每个存储引擎都会有自己的文件来保存各种数据。这些存储引擎真正存储了记录和索引等数据。</p>
+<h3 id="参数文件"><a href="#参数文件" class="headerlink" title="参数文件"></a>参数文件</h3><p>MySQL稍微有所不同，MySQL实例可以不需要参数文件，这时所有的参数值取决于编译MySQL时指定的默认值和源代码中指定参数的默认值。但是，如果MySQL实例在默认的数据库目录下找不到mysql架构（应该是指mysql.host），则启动同样会失败。</p>
+<p>MySQL的mysql架构中记录了访问该实例的权限，当找不到这个架构时，MySQL实例不会成功启动。</p>
+<p>MySQL数据库的参数文件是以文本方式进行储存的</p>
+<h4 id="什么是参数"><a href="#什么是参数" class="headerlink" title="什么是参数"></a>什么是参数</h4><p>数据库参数可以看成一个键值对，参数为键，数值为值。</p>
+<p>可以通过SHOW VARIABLES查看数据库中的所有参数，还可使用LIKE过滤参数名</p>
+<p>5.1版本开始，可以通过information_schema架构下的GLOBAL_VARIABLES视图来进行查找</p>
+<p>推荐使用SHOW VARIABLES，因为简单兼容性好</p>
+<p>MySQL中不包含隐藏参数</p>
+<h4 id="参数类型"><a href="#参数类型" class="headerlink" title="参数类型"></a>参数类型</h4><p>参数分为动态参数和静态参数</p>
+<p>动态参数意味着可以在MySQL实例运行中进行更改，静态参数说明在整个实例生命周期内都不得进行更改，就好像是只读（read only）的。</p>
+<p>这里看到global和session关键字，它们表明该参数的修改是基于当前会话还是整个实例的生命周期。有些动态参数只能在会话中进行修改，如autocommit；而有些参数修改完后，在整个实例声明周期中都会生效，如binlog_cache_size；而有些参数既可以在会话中又可以在整个实例的生命周期内生效，如read_buffer_size。举例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; SET read_buffer_size=524288;</span><br><span class="line">mysql&gt; SELECT @@session.read_buffer_size\G;</span><br><span class="line"># @@session.read_buffer_size: 524288</span><br><span class="line">mysql&gt; SELECT @@global.read_buffer_size\G;</span><br><span class="line"># @@global.read_buffer_size: 2093056</span><br></pre></td></tr></table></figure>
+<p>用户同样可以直接使用SET@@global|@@session来更改。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SET @@global.read_buffer_size=1048576</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的是，对变量的全局值进行了修改，在这次的实例生命周期内都有效，但MySQL实例本身并不会对参数文件中的值进行修改。</p>
+<p>静态变量在运行的时候是不能修改的，会有报错</p>
+<h3 id="日志文件"><a href="#日志文件" class="headerlink" title="日志文件"></a>日志文件</h3><p>常见日志有：</p>
+<ul>
+<li>错误日志</li>
+<li>二进制日志</li>
+<li>慢查询日志</li>
+<li>查询日志</li>
+</ul>
+<p>可以帮助DBA对MySQL的运行状态进行诊断</p>
+<h4 id="错误日志"><a href="#错误日志" class="headerlink" title="错误日志"></a>错误日志</h4><p>该文件不仅记录了所有的错误信息，也记录了一些警告信息或正确的信息。</p>
+<p>用户可以通过命令SHOW VARIABLES LIKE ‘log_error’来定位该文件。可以看到错误文件的路径和文件名，在默认情况下错误文件的文件名为服务器的主机名。如上面看到的，该主机名为stargazer，所以错误文件名为stargazer.err。</p>
+<h4 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h4><p>慢查询日志（slow log）可帮助DBA定位可能存在问题的SQL语句，从而进行SQL语句层面的优化。例如，可以在MySQL启动时设一个阈值，将运行时间超过该值的所有SQL语句都记录到慢查询日志文件中。DBA每天或每过一段时间对其进行检查，确认是否有SQL语句需要进行优化。该阈值可以通过参数long_query_time来设置，默认值为10，代表10秒。<br>在默认情况下，MySQL数据库并不启动慢查询日志，用户需要手工将这个参数设为ON。</p>
+<p>有两点要注意，首先MySQL数据库会记录运行时间大于该值的SQL语句，但不是大于等于；5.1版本开始，开始用微妙记录运行时间，可以更精确的记录sql语句运行时间。</p>
+<p>另一个和慢查询日志有关的参数是log_queries_not_using_indexes，如果运行的SQL语句没有使用索引，则MySQL数据库同样会将这条SQL语句记录到慢查询日志文件。</p>
+<p>MySQL 5.6.5版本开始新增一个参数log_throttle_queries_not_using_indexes，用来表示每分钟允许记录到slow log的且未使用索引的SQL语句次数。该值默认为0，表示没有限制。在生产环境下，若没有使用索引，此类SQL语句会频繁地被记录到slow log，从而导致slow log文件的大小不断增加，故DBA可通过此参数进行配置。</p>
+<p>如果用户希望得到执行时间最长的10条SQL语句，可以运行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysqldumpslow -s al -n 10 david.log</span><br></pre></td></tr></table></figure>
+<p>MySQL 5.1开始可以将慢查询的日志记录放入一张表中，这使得用户的查询更加方便和直观。慢查询表在mysql架构下，名为slow_log，其表结构定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mysqldumpslow -s al -n 10 david.log</span><br><span class="line">#...</span><br></pre></td></tr></table></figure>
+<p>参数log_output指定了慢查询输出的格式，默认为FILE，可以将它设为TABLE，然后就可以查询mysql架构下的slow_log表了。</p>
+<p>查看slow_log表的定义发现该表使用的是CSV引擎，对大数据量下的查询效率可能不高。用户可以把slow_log表的引擎转换到MyISAM，并在start_time列上添加索引以进一步提高查询的效率。但是，如果已经启动了慢查询，将会提示错误。所以先关掉（SET GLOBAL slow_query_log=off），再改。</p>
+<p>InnoSQL版本加强了对于SQL语句的捕获方式。在原版MySQL的基础上在slow log中增加了对于逻辑读取（logical reads）和物理读取（physical reads）的统计。这里的物理读取是指从磁盘进行IO读取的次数，逻辑读取包含所有的读取。</p>
+<p>用户可以通过额外的参数long_query_io将超过指定逻辑IO次数的SQL语句记录到slow log中，还添加了参数slow_query_type,用来表示启用slow log的方式。</p>
+<h4 id="查询日志"><a href="#查询日志" class="headerlink" title="查询日志"></a>查询日志</h4><p>查询日志记录了所有对MYSQL数据库请求的信息，无论这些请求是否得到了正确的执行。默认文件名：主机名.log。</p>
+<p>查询日志甚至记录了对Access denied的请求，即对于未能正确执行的SQL语句，查询日志也会进行记录。</p>
+<p>5.1开始，可以将查询日志的记录放到mysql架构下的general_log表中，使用方法和slow_log基本一样。</p>
+<h4 id="二进制日志"><a href="#二进制日志" class="headerlink" title="二进制日志"></a>二进制日志</h4><p>二进制日志（binary log）记录了对MySQL数据库执行更改的所有操作，但是不包括SELECT和SHOW这类操作，因为这类操作对数据本身并没有修改。然而，若操作本身并没有导致数据库发生变化，那么该操作可能也会写入二进制文件。</p>
+<p>从上述例子可以看到，MySQL数据库首先进行UPDATE操作，从返回的结果看到Changed为0，这意味着该操作并没有导致数据库的变化。但是通过命令SHOW BINLOG EVENT可以看出在二进制日志中的确进行了记录。</p>
+<p>二进制日志还包括了执行数据库更改操作的时间等其他额外信息。总的来说，二进制日志主要有以下作用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">恢复（recovery）：某些数据的恢复需要二进制日志，例如，在一个数据库全部文件恢复后，用户可以通过二进制日志进行point-in-time的恢复。</span><br><span class="line">复制（replication）：其原理与恢复类似，通过复制和执行二进制日志使一台远程的MySQL数据库（一般称为slave或standby）与一台MySQL数据库（一般称为master或primary）进行实时同步。</span><br><span class="line">审计（audit）：用户可以通过二进制日志中的信息来进行审计，判断是否有对数据库进行注入的攻击。</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -390,8 +442,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -435,6 +496,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第3章-文件"><span class="nav-number">1.</span> <span class="nav-text">第3章 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参数文件"><span class="nav-number">1.1.</span> <span class="nav-text">参数文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是参数"><span class="nav-number">1.1.1.</span> <span class="nav-text">什么是参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数类型"><span class="nav-number">1.1.2.</span> <span class="nav-text">参数类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志文件"><span class="nav-number">1.2.</span> <span class="nav-text">日志文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#错误日志"><span class="nav-number">1.2.1.</span> <span class="nav-text">错误日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢查询日志"><span class="nav-number">1.2.2.</span> <span class="nav-text">慢查询日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询日志"><span class="nav-number">1.2.3.</span> <span class="nav-text">查询日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二进制日志"><span class="nav-number">1.2.4.</span> <span class="nav-text">二进制日志</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
