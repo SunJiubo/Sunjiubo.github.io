@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang>
+<html class="theme-next gemini use-motion" lang>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="弟4章 表">
+<meta name="description" content="弟4章 表索引组织表在InnoDB中，表都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（index organized table）。在InnoDB表中，每张表都有个主键，如果在创建表时没有显式地定义主键，则InnoDB存储引擎会按如下方式选择或创建主键：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="弟4章 表">
 <meta property="og:url" content="https://SunJiubo.github.io/2019/04/19/Mysql技术内幕/第4章 表/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
-<meta property="og:description" content="弟4章 表">
+<meta property="og:description" content="弟4章 表索引组织表在InnoDB中，表都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（index organized table）。在InnoDB表中，每张表都有个主键，如果在创建表时没有显式地定义主键，则InnoDB存储引擎会按如下方式选择或创建主键：">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-19T12:13:27.792Z">
+<meta property="og:updated_time" content="2019-04-19T12:31:11.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="弟4章 表">
-<meta name="twitter:description" content="弟4章 表">
+<meta name="twitter:description" content="弟4章 表索引组织表在InnoDB中，表都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（index organized table）。在InnoDB表中，每张表都有个主键，如果在创建表时没有显式地定义主键，则InnoDB存储引擎会按如下方式选择或创建主键：">
 
 
 
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -309,7 +309,12 @@
       
 
       
-        <h2 id="弟4章-表"><a href="#弟4章-表" class="headerlink" title="弟4章 表"></a>弟4章 表</h2>
+        <h2 id="弟4章-表"><a href="#弟4章-表" class="headerlink" title="弟4章 表"></a>弟4章 表</h2><h3 id="索引组织表"><a href="#索引组织表" class="headerlink" title="索引组织表"></a>索引组织表</h3><p>在InnoDB中，表都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（index organized table）。在InnoDB表中，每张表都有个主键，如果在创建表时没有显式地定义主键，则InnoDB存储引擎会按如下方式选择或创建主键：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">首先判断表中是否有非空的唯一索引（Unique NOT NULL），如果有，则该列即为主键。</span><br><span class="line">如果不符合上述条件，InnoDB存储引擎自动创建一个6字节大小的指针。</span><br></pre></td></tr></table></figure></p>
+<p><strong>当表中有多个非空唯一索引时，InnoDB将选择建表时第一个定义的非空唯一索引为主键。这里需要注意的是，主键的选择根据的是定义索引的顺序，而不是建表时列的顺序。</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; CREATE TABLE z (</span><br><span class="line">    -&gt; a INT NOT NULL,</span><br><span class="line">    -&gt; b INT NULL,</span><br><span class="line">    -&gt; c INT NOT NULL,</span><br><span class="line">    -&gt; d INT NOT NULL,</span><br><span class="line">    -&gt; UNIQUE KEY (b),</span><br><span class="line">    -&gt; UNIQUE KEY (d), UNIQUE KEY (c)); # d是主键，b不是非空的，a不是唯一的，d排在c前边</span><br></pre></td></tr></table></figure>
+<p>因为d列首先定义为一个唯一索引，故InnoDB将其视为主键。</p>
+<p>_rowid可以显示表的主键，因此通过上述查询可以找到表z的主键。 另外需要注意的是，_rowid只能用于查看单个列为主键的情况，对于多列组成的键就显得无能为力了。 </p>
+
       
     </div>
     
@@ -457,7 +462,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#弟4章-表"><span class="nav-number">1.</span> <span class="nav-text">弟4章 表</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#弟4章-表"><span class="nav-number">1.</span> <span class="nav-text">弟4章 表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引组织表"><span class="nav-number">1.1.</span> <span class="nav-text">索引组织表</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -495,7 +500,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 
@@ -594,6 +599,13 @@
 
   
   
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
