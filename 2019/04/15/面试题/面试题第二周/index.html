@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="208面试题-第一周1、线程有哪些状态？ 线程通常都有五种状态，创建、就绪、运行、阻塞和死亡。  创建状态。在生成线程对象，并没有调用该对象的start方法，这是线程处于创建状态。  就绪状态。当调用了线程对象的start方法之后，该线程就进入了就绪状态，但是此时线程调度程序还没有把该线程设置为当前线程，此时处于就绪状态。在线程运行之后，从等待或者睡眠中回来之后，也会处于就绪状态。 运行状态。线程">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-21T12:18:00.362Z">
+<meta property="og:updated_time" content="2019-04-21T14:15:46.404Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题第二周">
 <meta name="twitter:description" content="208面试题-第一周1、线程有哪些状态？ 线程通常都有五种状态，创建、就绪、运行、阻塞和死亡。  创建状态。在生成线程对象，并没有调用该对象的start方法，这是线程处于创建状态。  就绪状态。当调用了线程对象的start方法之后，该线程就进入了就绪状态，但是此时线程调度程序还没有把该线程设置为当前线程，此时处于就绪状态。在线程运行之后，从等待或者睡眠中回来之后，也会处于就绪状态。 运行状态。线程">
@@ -359,7 +359,7 @@
 <h3 id="11-什么是反射？"><a href="#11-什么是反射？" class="headerlink" title="11. 什么是反射？"></a>11. 什么是反射？</h3><p>反射主要是指程序可以访问、检测和修改它本身状态或行为的一种能力</p>
 <p><strong>Java反射：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在Java运行时环境中，对于任意一个类，能否知道这个类有哪些属性和方法？对于任意一个对象，能否调用它的任意一个方法</span><br><span class="line">Java反射机制主要提供了以下功能：</span><br><span class="line"></span><br><span class="line">在运行时判断任意一个对象所属的类。</span><br><span class="line">在运行时构造任意一个类的对象。</span><br><span class="line">在运行时判断任意一个类所具有的成员变量和方法。</span><br><span class="line">在运行时调用任意一个对象的方法。</span><br></pre></td></tr></table></figure>
-<h3 id="12-什么是-java-序列化？什么情况下需要序列化？"><a href="#12-什么是-java-序列化？什么情况下需要序列化？" class="headerlink" title="12. 什么是 java 序列化？什么情况下需要序列化？"></a>12. 什么是 java 序列化？什么情况下需要序列化？</h3><p>简单说就是为了保存在内存中的各种对象的状态（也就是实例变量，不是方法），并且可以把保存的对象状态再读出来。虽然你可以用你自己的各种各样的方法来保存object states，但是Java给你提供一种应该比你自己好的保存对象状态的机制，那就是序列化。</p>
+<h3 id="12-什么是-java-序列化？什么情况下需要序列化？"><a href="#12-什么是-java-序列化？什么情况下需要序列化？" class="headerlink" title="12. 什么是 java 序列化？什么情况下需要序列化？"></a>12. 什么是 java 序列化？什么情况下需要序列化？</h3><p>简单说就是为了在内存中保存各种对象的状态（也就是实例变量，不是方法），并且可以把保存的对象状态再读出来。虽然你可以用你自己的各种各样的方法来保存object states，但是Java给你提供一种应该比你自己好的保存对象状态的机制，那就是序列化。</p>
 <p>什么情况下需要序列化：</p>
 <p>a）当你想把的内存中的对象状态保存到一个文件中或者数据库中时候；<br>b）当你想用套接字在网络上传送对象的时候；<br>c）当你想通过RMI传输对象的时候；</p>
 <h3 id="13-动态代理是什么？有哪些应用？"><a href="#13-动态代理是什么？有哪些应用？" class="headerlink" title="13.  动态代理是什么？有哪些应用？"></a>13.  动态代理是什么？有哪些应用？</h3><p>动态代理：</p>
