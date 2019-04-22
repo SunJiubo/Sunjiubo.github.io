@@ -79,14 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="MySQL技术内幕">
-<meta property="og:url" content="https://SunJiubo.github.io/categories/index.html">
+<meta name="description" content="208面试题-第二周1、深拷贝和浅拷贝区别是什么？ 浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()） 深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题第三周">
+<meta property="og:url" content="https://SunJiubo.github.io/2019/04/22/面试题/面试题第三周/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
+<meta property="og:description" content="208面试题-第二周1、深拷贝和浅拷贝区别是什么？ 浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()） 深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-13T13:36:45.579Z">
+<meta property="og:updated_time" content="2019-04-22T12:21:25.358Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL技术内幕">
+<meta name="twitter:title" content="面试题第三周">
+<meta name="twitter:description" content="208面试题-第二周1、深拷贝和浅拷贝区别是什么？ 浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()） 深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）">
 
 
 
@@ -116,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://SunJiubo.github.io/categories/">
+  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/22/面试题/面试题第三周/">
 
 
 
 
 
-  <title>MySQL技术内幕 | NineBoy's Blog</title>
+  <title>面试题第三周 | NineBoy's Blog</title>
   
 
 
@@ -227,40 +230,152 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/22/面试题/面试题第三周/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/quan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NineBoy's Blog">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">MySQL技术内幕</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
-                No categories
-            </div>
-            <div class="category-all">
+          <h1 class="post-title" itemprop="name headline">面试题第三周</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
               
-            </div>
-          </div>
-        
-      </div>
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-22T20:14:29+08:00">
+                2019-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="208面试题-第二周"><a href="#208面试题-第二周" class="headerlink" title="208面试题-第二周"></a>208面试题-第二周</h2><h3 id="1、深拷贝和浅拷贝区别是什么？"><a href="#1、深拷贝和浅拷贝区别是什么？" class="headerlink" title="1、深拷贝和浅拷贝区别是什么？"></a>1、深拷贝和浅拷贝区别是什么？</h3><ul>
+<li>浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()）</li>
+<li>深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）</li>
+</ul>
+<a id="more"></a>
+<h3 id="2-jsp-和-servlet-有什么区别？"><a href="#2-jsp-和-servlet-有什么区别？" class="headerlink" title="2. jsp 和 servlet 有什么区别？"></a>2. jsp 和 servlet 有什么区别？</h3><ol>
+<li><p>jsp经编译后就变成了Servlet.（JSP的本质就是Servlet，JVM只能识别java的类，不能识别JSP的代码，Web容器将JSP的代码编译成JVM能够识别的java类）</p>
+</li>
+<li><p>jsp更擅长表现于页面显示，servlet更擅长于逻辑控制。</p>
+</li>
+<li><p>Servlet中没有内置对象，Jsp中的内置对象都是必须通过HttpServletRequest对象，HttpServletResponse对象以及HttpServlet对象得到。</p>
+</li>
+<li><p>Jsp是Servlet的一种简化，使用Jsp只需要完成程序员需要输出到客户端的内容，Jsp中的Java脚本如何镶嵌到一个类中，由Jsp容器完成。而Servlet则是个完整的Java类，这个类的Service方法用于生成对客户端的响应。</p>
+</li>
+</ol>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/19/Mysql技术内幕/第4章 表/" rel="next" title="弟4章 表">
+                <i class="fa fa-chevron-left"></i> 弟4章 表
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -293,8 +408,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -338,6 +462,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第二周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第二周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、深拷贝和浅拷贝区别是什么？"><span class="nav-number">1.1.</span> <span class="nav-text">1、深拷贝和浅拷贝区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-jsp-和-servlet-有什么区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2. jsp 和 servlet 有什么区别？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
