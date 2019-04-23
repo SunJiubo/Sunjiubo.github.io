@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第5章 索引与算法一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。 DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第5章 索引与算法">
+<meta property="og:url" content="https://SunJiubo.github.io/2019/04/23/Mysql技术内幕/第5章 索引与算法/index.html">
+<meta property="og:site_name" content="NineBoy&#39;s Blog">
+<meta property="og:description" content="第5章 索引与算法一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。 DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-23T14:31:01.541Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第5章 索引与算法">
+<meta name="twitter:description" content="第5章 索引与算法一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。 DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://SunJiubo.github.io/2019/04/23/Mysql技术内幕/第5章 索引与算法/">
+
+
+
+
+
+  <title>第5章 索引与算法 | NineBoy's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">NineBoy's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/23/Mysql技术内幕/第5章 索引与算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/quan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NineBoy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第5章 索引与算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-23T20:34:23+08:00">
+                2019-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第5章-索引与算法"><a href="#第5章-索引与算法" class="headerlink" title="第5章 索引与算法"></a>第5章 索引与算法</h2><p>一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。</p>
+<p>DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。<br><a id="more"></a></p>
+<h3 id="InnoDB存储引擎索引概述"><a href="#InnoDB存储引擎索引概述" class="headerlink" title="InnoDB存储引擎索引概述"></a>InnoDB存储引擎索引概述</h3><p>前面已经提到过，InnoDB存储引擎支持的哈希索引是自适应的，InnoDB会根据表的使用情况自动为表生成哈希索引，不能人为干预是否在一张表中生成哈希索引。</p>
+<p>B+树索引就是传统意义上的索引，这是目前关系型数据库系统中查找最为常用和最为有效的索引。</p>
+<p>另一个常常被DBA忽视的问题是：B+树索引并不能找到一个给定键值的具体行。B+树索引能找到的只是被查找数据行所在的页。然后数据库通过把页读入到内存，再在内存中进行查找，最后得到要查找的数据。</p>
+<h3 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h3><h4 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h4><p>在前面的章节中，每页Page Directory中的槽是按照逐渐的顺序存放的，对于某一条具体记录的查询是通过Page Directory进行二分查找得到的。</p>
+<h4 id="二叉查找树和平衡二叉树（ALV树）"><a href="#二叉查找树和平衡二叉树（ALV树）" class="headerlink" title="二叉查找树和平衡二叉树（ALV树）"></a>二叉查找树和平衡二叉树（ALV树）</h4><p>平衡二叉树的查找性能是比较高的，但不是最高的，只是接近最高性能。最好的性能需要建立一棵最优二叉树，但是最优二叉树的建立和维护需要大量的操作，因此，用户一般只需建立一棵平衡二叉树即可。</p>
+<p>当一棵平衡二叉树插入一个新的节点后，平衡二叉树需要做旋转操作。</p>
+<p>因此对一棵平衡二叉树的维护是有一定开销的，不过平衡二叉树多用于内存结构对象，因此维护的开销相对较小。</p>
+<h3 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h3><p>B+树由B树和索引顺序访问方法（ISAM，是不是很熟悉？对，这也是MyISAM引擎最初参考的数据结构）演化而来，但是在现实使用中几乎已经没有使用B树的情况了。</p>
+<p>这里，我来精简地对B+树做个介绍：B+树是为磁盘或其他直接存取辅助设备设计的一种平衡查找树。在B+树种，所有记录节点都是按键值的大小顺序存放在同一层的叶子节点上，由各叶子节点指针进行连接（双向链表）。先来看一个B+树，其高度为2，每页可存放4条记录，扇出（fan out）为5。</p>
+<h4 id="B-树的插入操作"><a href="#B-树的插入操作" class="headerlink" title="B+树的插入操作"></a>B+树的插入操作</h4><table border="1"><tr><th>Leaf Page满</th><th>Index Page满</th><th>操作</th></tr><tr><td>No</td><td>No</td><td>直接将记录插入到叶子节点</td></tr><tr>    <td>Yes</td><td>No</td><td>1. 拆分Leaf Page；2. 将中间的节点放入到Index Page中；3. 小于中间节点的记录放左边； 4. 大于或等于中间节点的记录放右边</td></tr><tr><td>Yes</td><td>Yes</td><td>1. 拆分Leaf Page；2. 小于中间节点的记录放左边；3. 大于或等于中间节点的记录放右边；4.拆分Index Page；5. 小于中间节点的记录放左边；6. 大于中间节点的记录放右边；7. 中间节点放入上一层Index Page</td></tr></table>
+
+<p>但是为了保持平衡对于新插入的键值可能需要做大量的拆分页（split）操作。因为B+树结构主要用于磁盘，页的拆分意味着磁盘的操作，所以应该在可能的情况下尽量减少页的拆分操作。因此，B+树同样提供了类似于平衡二叉树的旋转功能。</p>
+<p>旋转发生在Leaf Page已经满，但是其的左右兄弟节点没有满的情况下。这时B+树并不会急于去做拆分页的操作，而是将记录移到所有页的兄弟节点上。在通常情况下，左兄弟会被首先检查用来做旋转操作。</p>
+<h4 id="B-树的删除操作"><a href="#B-树的删除操作" class="headerlink" title="B+树的删除操作"></a>B+树的删除操作</h4><p>B+树使用填充因子（fill factor）来控制树的删除变化，50%是填充因子可设的最小值。</p>
+<table border="2"><tr><th>叶子节点小于填充因子</th><th>中间节点小于填充因子</th><th>操作</th></tr><tr><td>No</td><td>No</td><td>直接将记录从叶子节点删除，如果该节点还是Index Page的节点，用该节点的右节点代替</td></tr><tr>    <td>Yes</td><td>No</td><td>合并叶子结点和它的兄弟节点，同时更新Index Page</td></tr><tr><td>Yes</td><td>Yes</td><td>1. 合并叶子节点和它的兄弟节点 2. 更新Index Page 3. 合并Index Page和它的兄弟节点</td></tr></table>
+
+<h3 id="B-树索引"><a href="#B-树索引" class="headerlink" title="B+树索引"></a>B+树索引</h3><p>前面讨论过的都是B+树的数据结构及其一般操作，B+树索引的本质就是B+树在数据库中的实现。但是B+索引在数据库中有一个特点是高扇出性，因此在数据库中，B+树的高度一般都在2~4层，这也就是说查找某一键值的行记录时最多只需要2到4次IO，这倒不错。因为当前一般的机械磁盘每秒至少可以做100次IO，2~4次的IO意味着查询时间只需0.02~0.04秒。</p>
+<p>数据库中的B+树索引可以分为聚集索引（clustered index）和辅助索引（secondary index），但是不管是聚集还是辅助的索引，其内部都是B+树的，即高度平衡的，叶子节点存放着所有的数据。聚集索引与辅助索引不同的是，叶子节点存放的是否是一整行的信息。</p>
+<h4 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h4><p>而聚集索引（clustered index）就是按照每张表的主键构造一棵B+树，同时叶子节点中存放的即为整张表的行记录数据，也将聚集索引的叶子结点称为数据页。聚集索引的这个特性决定了索引组织表中数据也是索引的一部分。</p>
+<p>由于实际的数据页只能按照一棵B+树进行排序，因此每张表只能拥有一个聚集索引。</p>
+<p>此外，由于定义了数据的逻辑顺序，聚集索引能够特别快地访问针对范围值的查询。</p>
+<p>通过以上对非数据页节点的分析，可以发现数据页上存放的是完整的每行的记录，而在非数据页的索引页中，存放的仅仅是键值及指向数据页的偏移量，而不是一个完整的行记录。</p>
+<p>所以，聚集索引的存储并不是物理上连续的，而是逻辑上连续的。这其中有两点：一是前面说过的页通过双向链表链接，页按照主键的顺序排序；另一个是每个页中的记录也是通过双向链表进行维护的，物理存储上可以同样不按照主键存储。</p>
+<p>聚集索引的另一个好处是，它对于主键的排序查找和范围查找速度非常快。叶子节点的数据就是用户索要查询的数据。如用户需要查询一张注册用户的表，查询最后注册的10位用户，由于B+树索引是双向链表，用户可以快速找到最后一个数据页，并取出10条记录。若用命令EXPLAIN进行分析，可得：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; EXPLAIN</span><br><span class="line">    -&gt; SELECT * FROM Profile ORDER BY id LIMIT 10\G;</span><br></pre></td></tr></table></figure>
+<p>可以看到虽然使用ORDER BY对行记录进行排序，但是在实际过程中并没有进行所谓的filesort操作，而这就是因为聚集索引的特点。</p>
+<p>注意rows代表的是一个预估值不是确切的值，如果实际执行这句SQL的查询，实际只有9946条记录。</p>
+<h4 id="辅助索引"><a href="#辅助索引" class="headerlink" title="辅助索引"></a>辅助索引</h4><p>对于辅助索引，叶子节点并不包含行记录的全部数据。叶子节点除了包含键值以外，每个叶子节点中的索引行中还包含了一个书签（bookmark）。该书签用来告诉InnoDB存储引擎哪里可以找到与索引相对应的行数据。由于InnoDB存储引擎表是索引组织表，因此InnoDB存储引擎的辅助索引的书签就是相应行数据的聚集索引键。</p>
+<p>辅助索引的存在并不影响数据在聚集索引中的组织，因此每张表上可以有多个辅助索引。当通过辅助索引来寻找数据时，InnoDB存储引擎会遍历辅助索引并通过叶级别的指针获得指向主键索引的主键，然后再通过主键索引来找到一个完整的行记录。举例来说，如果在一棵高度为3的辅助索引树种查找数据，那需要对这棵辅助索引树遍历3次找到指定主键，如果聚集索引树的高度同样为3，那么还需要对聚集索引树进行3次查找，最终找到一个完整的行数据所在的页，因此一共需要6次逻辑IO访问以得到最终的一个数据页。</p>
+<p>对于其他的一些数据库，如Microsoft SQL Server数据库，其有一种称为堆表的表类型，即行数据的存储按照插入的顺序存放。<br>堆表的特性决定了堆表上的索引都是非聚集的，主键与非主键的区别只是是否唯一且非空（NOT NULL）。因此这时书签是一个行标识符（Row Identifier，RID），可以用如“文件号：页号：槽号”的格式来定位实际的行数据。</p>
+<p>有的Microsoft SQL Server数据库DBA问我这样的问题，为什么在Microsoft SQL Server数据库上还要使用索引组织表？堆表的书签使非聚集查找可以比主键书签方式更快，并且非聚集可能在一张表中存在多个，我们需要对多个非聚集索引进行查找。而且对于非聚集索引的离散读取，索引组织表上的非聚集索引会比堆表上的聚集索引慢一些。</p>
+<p>当然，在一些情况下，使用堆表的确会比索引组织表更快，但是我觉得大部分原因是由于存在OLAP（On-Line Analytical Processing，在线分析处理）的应用。其次就是前面提到的，表中数据是否需要更新，并且更新是否影响到物理地址的变更。此外另一个不能忽视的是对于排序和范围查找，索引组织表通过B+树的中间节点就可以找到要查找的所有页，然后进行读取，而堆表的特性决定了这对其是不能实现的。最后，非聚集索引的离散读，的确存在上述的情况，但是一般的数据库都通过实现预读（read ahead）技术来避免多次的离散读操作。因此具体是建堆表还是索引组织表，这取决于应用，不存在哪个更优的问题。</p>
+<p>图5-16显示了表t中辅助索引idx_c和聚集索引的关系。可以看到辅助索引的叶子节点中包含了列c的值和主键的值。因为这里我特意将键值设为负值，所以会发现-1以7f ff ff ff的方式进行内部存储。7（0111）最高位为0，代表负值，实际的值应该取反后加1，即得-1。（第200页的图5-16辅助索引分析非常直观！！！）</p>
+<h4 id="B-树索引的分裂"><a href="#B-树索引的分裂" class="headerlink" title="B+树索引的分裂"></a>B+树索引的分裂</h4><p>B+树索引页的分裂并不总是从页的中间记录开始，这样可能会导致页空间的浪费。例如下面的记录：1、2、3、4、5、6、7、8、9。</p>
+<p>插入是根据自增顺序进行的，若这时插入10这条记录后需要进行页的分裂操作，那么根据5.3.1节介绍的分裂方法，会将记录5作为分裂点记录（split record），分裂后得到下面两个页：P1：1、2、3、4 P2：5、6、7、8、9、10。</p>
+<p>然而由于插入是顺序的，P1这个页中将不会再有记录被插入，从而导致空间的浪费。而P2又会再次进行分裂。</p>
+<p>InnoDB的Page Header中有以下几个部分用来保存插入的顺序信息：PAGE_LAST_INSERT、PAGE_DIRECTION、PAGE_N_DIRECTION。</p>
+<p>通过这些信息，InnoDB可以决定是向左还是向右进行分裂，同时决定将分裂点记录为哪一个。若插入是随机的，则取页的中间记录作为分裂点的记录，这和之前介绍的相同。若往同一方向进行插入的记录数量为5，并且目前已经定位（cursor）到的记录之后还有3条记录，则分裂点的记录为定位到的记录后的第三条记录，否则分裂点记录就是待插入的记录。**</p>
+<p>对于图5-19的情况，分裂点就为插入记录本身，向右分裂后仅插入记录本身，这在自增插入时是普遍存在的一种情况。</p>
+<h4 id="B-树索引的管理"><a href="#B-树索引的管理" class="headerlink" title="B+树索引的管理"></a>B+树索引的管理</h4><ol>
+<li>索引管理</li>
+</ol>
+<p>通过ALTER TABLE创建索引的语法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ALTER TABLE tbl_name</span><br><span class="line">| ADD &#123;INDEX|KEY&#125; [index_name]</span><br><span class="line">[index_type] (index_col_name,...) [index_option] ...</span><br><span class="line"></span><br><span class="line">ALTER TABLE tbl_name</span><br><span class="line">DROP PRIMARY KEY</span><br><span class="line">| DROP &#123;INDEX|KEY&#125; index_name</span><br></pre></td></tr></table></figure>
+<p>CREATE/DROP INDEX的语法同样很简单：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">CREATE [UNIQUE] INDEX index_name</span><br><span class="line">[index_type]</span><br><span class="line">ON tbl_name (index_col_name,...)</span><br><span class="line"></span><br><span class="line">DROP INDEX index_name ON tbl_name</span><br></pre></td></tr></table></figure>
+<p>用户可以设置对整个行的数据进行索引，也可以只索引一个列的开头部分数据，如前面创建的表t，列b为varchar(8000)，但是用户可以只索引前100个字节，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; ALTER TABLE t</span><br><span class="line">    -&gt; ADD KEY idx_b (b(100));</span><br></pre></td></tr></table></figure>
+<p>通过命令SHOW INDEX FROM可以观察到表t上有4个索引，分别为主键索引、c列上的辅助索引、b列的前100字节构成的辅助索引，以及（a、c）的联合辅助索引。接着具体阐述命令SHOW INDEX展现结果中每列的含义。</p>
+<p>Seq_in_index：索引中该列的位置，如果看联合索引idx_a_c就比较直观了。</p>
+<p>Collation：列以什么方式存储在索引中。可以是A或NULL。B+树索引总是A，即排序的。如果使用了Heap存储引擎，并且建立了Hash索引，这里就会显示NULL了。因为Hash根据Hash桶存放索引数据，而不是对数据进行排序。</p>
+<p>Cardinality：非常关键的值，表示索引中唯一值得数目的估计值。Cardinality表的行数应尽可能接近1，如果非常小，那么用户需要考虑是否可以删除此索引。</p>
+<p>Sub_part：是否是列的部分被索引。如果看idx_b这个索引，这里显示100，表示只对列的前100字符进行索引。如果索引整个列，则该字段为NULL。</p>
+<p>Cardinality值非常关键，优化器会根据这个值来判断是否使用这个索引。但是这个值并不是实时更新的，即并非每次索引的更新都会更新该值，因为这样代价太大了。因此这个值是不太准确的，只是一个大概的值。上面显示的结果主键的Cardinality为2，但是很显然我们的表中有4条记录，这个值应该是4。如果需要更新索引Cardinality的信息，可以使用ANALYZE TABLE命令。</p>
+<p>Cardinality为NULL，在某些情况下可能会发生索引建立了却没有用到的情况。这时最好的解决办法就是做一次ANALYZE TABLE的操作。因此我建议在一个非高峰时间，对应用程序下的几张核心表做ANALYZE TABLE操作，这能使优化器和索引更好地为你工作。</p>
+<ol start="2">
+<li>Fast Index Creation</li>
+</ol>
+<p>MySQL 5.5版本之前存在的一个普遍被人诟病的问题是MySQL数据库对于索引的添加或者删除的这类DDL操作，MySQL数据库的操作过程为： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">首先创建一张新的临时表，表结构为通过命令ALTER TABLE新定义的结构。</span><br><span class="line">然后把原表中数据导入到临时表。</span><br><span class="line">接着删除原表。</span><br><span class="line">最后把临时表重名为原来的表名。</span><br></pre></td></tr></table></figure>
+<p>可以发现，若用户对于一张大表进行索引的添加和删除操作，那么这会需要很长的时间。更关键的是，若有大量事务需要访问正在被修改的表，这意味着数据库服务不可用。而这对于Microsoft SQL Server或Oracle数据库的DBA来说，MySQL数据库的索引维护始终让他们感觉非常痛苦。</p>
+<p>InnoDB存储引擎从InnoDB 1.0.x版本开始支持一种称为Fast Index Creation（快速索引创建）的索引创建方式——简称FIC。</p>
+<p>对于辅助索引的创建，InnoDB存储引擎会对创建索引的表加上一个S锁。在创建的过程中，不需要重建表，因此速度较之前提高很多，并且数据库的可用性也得到了提高。删除辅助索引操作就更简单了，InnoDB存储引擎只需更新内部视图，并将辅助索引的空间标记为可用，同时删除MySQL数据库内部视图上对该表的索引定义即可。</p>
+<p>由于FIC在索引的创建的过程中对表加上了S锁，因此在创建的过程中只能对该表进行读操作，若有大量的事务需要对目标表进行写操作，那么数据库的服务同样不可用。此外，FIC方式只限定于辅助索引，对于主键的创建和删除同样需要重建一张表。</p>
+<ol start="3">
+<li>Online Schema Change</li>
+</ol>
+<p>所谓“在线”是指在事务的创建过程中，可以有读写事务对表进行操作，这提高了原有MySQL数据库在DDL操作时的并发性。</p>
+<p>Facebook采用PHP脚本来实现OSC，而并不是通过修改InnoDB存储引擎源码的方式。</p>
+<p>实现OSC步骤如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">init，即初始化阶段，会对创建的表做一些验证工作，如检查表是否有主键，是否存在触发器或者外键等。</span><br><span class="line"></span><br><span class="line">createCopyTable，创建和原始表结构一样的新表</span><br><span class="line"></span><br><span class="line">alterCopyTable，对创建的新表进行ALTER TABLE操作，如添加索引或列等</span><br><span class="line"></span><br><span class="line">createDeltasTable，创建deltas表，该表的作用是为下一步创建的触发器所使用。之后对原表的所有DML操作会被记录到createDeltasTable中</span><br><span class="line"></span><br><span class="line">createTriggers，对原表创建INSERT、UPDATE、DELETE操作的触发器。触发操作产生的记录被写入到deltas表。</span><br><span class="line"></span><br><span class="line">startSnpshotXact，开始OSC操作的事务。</span><br><span class="line"></span><br><span class="line">selectTableInfoOutfile，将原表中的数据写入到新表。为了减少对原表的锁定时间，这里通过分片（chunked）将数据输出到多个外部文件，然后将外部文件的数据导入到copy表中。分片的大小可以指定，默认值是500 000。</span><br><span class="line"></span><br><span class="line">dropNCIndexs，在导入到新表前，删除新表中所有的辅助索引。</span><br><span class="line"></span><br><span class="line">loadCopyTable，将导出的分片文件导入到新表。</span><br><span class="line"></span><br><span class="line">replayChanges，将OSC过程中原表DML操作的记录应用到新表中，这些记录被保存在deltas表中。</span><br><span class="line"></span><br><span class="line">recreateNCIndexs，重新创建辅助索引。</span><br><span class="line"></span><br><span class="line">replayChanges，再次进行DML日志的回放操作，这些日志是在上述创建辅助索引过程中新产生的日志。</span><br><span class="line"></span><br><span class="line">swapTables，将原表和新表交换名字，整个操作需要锁定2张表，不允许新的数据产生。由于改名是一个很快的操作，因此阻塞的时间非常短。</span><br></pre></td></tr></table></figure>
+<p>上述只是简单介绍了OSC的实现过程，实际脚本非常复杂，仅OSC的PHP核心代码就有2200多行，用到的MySQL InnoDB的知识点非常多，建议DBA和数据库开发人员尝试进行阅读，这有助于更好地理解InnoDB存储引擎的使用。</p>
+<p>由于OSC是一个PHP脚本，因此汽油一定的局限性。例如其要求进行修改的表一定要有主键，且表本身不能存在外键和触发器，此外，再进行OSC过程中，允许SET sql_bin_log=0，因此所做的操作不会同步到slave服务器，可能导致主从不一致的情况。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/22/面试题/面试题第三周/" rel="next" title="面试题第三周">
+                <i class="fa fa-chevron-left"></i> 面试题第三周
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/quan.jpg" alt="孙九博">
+            
+              <p class="site-author-name" itemprop="name">孙九博</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第5章-索引与算法"><span class="nav-number">1.</span> <span class="nav-text">第5章 索引与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎索引概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎索引概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">1.2.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二分查找"><span class="nav-number">1.2.1.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树和平衡二叉树（ALV树）"><span class="nav-number">1.2.2.</span> <span class="nav-text">二叉查找树和平衡二叉树（ALV树）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树"><span class="nav-number">1.3.</span> <span class="nav-text">B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的插入操作"><span class="nav-number">1.3.1.</span> <span class="nav-text">B+树的插入操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的删除操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">B+树的删除操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树索引"><span class="nav-number">1.4.</span> <span class="nav-text">B+树索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#聚集索引"><span class="nav-number">1.4.1.</span> <span class="nav-text">聚集索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助索引"><span class="nav-number">1.4.2.</span> <span class="nav-text">辅助索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的分裂"><span class="nav-number">1.4.3.</span> <span class="nav-text">B+树索引的分裂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的管理"><span class="nav-number">1.4.4.</span> <span class="nav-text">B+树索引的管理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">孙九博</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
