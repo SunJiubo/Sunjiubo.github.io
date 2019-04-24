@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="208面试题-第二周1、深拷贝和浅拷贝区别是什么？ 浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()） 深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-23T12:33:11.900Z">
+<meta property="og:updated_time" content="2019-04-24T11:50:57.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题第三周">
 <meta name="twitter:description" content="208面试题-第二周1、深拷贝和浅拷贝区别是什么？ 浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝（例：assign()） 深拷贝是将对象及值复制过来，两个对象修改其中任意的值另一个值不会改变，这就是深拷贝（例：JSON.parse()和JSON.stringify()，但是此方法无法复制函数类型）">
@@ -326,6 +326,23 @@
 </ol>
 <h3 id="3-session-和-cookie-有什么区别？"><a href="#3-session-和-cookie-有什么区别？" class="headerlink" title="3.  session 和 cookie 有什么区别？"></a>3.  session 和 cookie 有什么区别？</h3><p>由于HTTP协议是无状态的协议，所以服务端需要记录用户的状态时，就需要用某种机制来识具体的用户，这个机制就是Session.典型的场景比如购物车，当你点击下单按钮时，由于HTTP协议无状态，所以并不知道是哪个用户操作的，所以服务端要为特定的用户创建了特定的Session，用用于标识这个用户，并且跟踪用户，这样才知道购物车里面有几本书。这个Session是保存在服务端的，有一个唯一标识。在服务端保存Session的方法很多，内存、数据库、文件都有。集群的时候也要考虑Session的转移，在大型的网站，一般会有专门的Session服务器集群，用来保存用户会话，这个时候 Session 信息都是放在内存的，使用一些缓存服务比如Memcached之类的来放 Session。<br>思考一下服务端如何识别特定的客户？这个时候Cookie就登场了。每次HTTP请求的时候，客户端都会发送相应的Cookie信息到服务端。实际上大多数的应用都是用 Cookie 来实现Session跟踪的，第一次创建Session的时候，服务端会在HTTP协议中告诉客户端，需要在 Cookie 里面记录一个Session ID，以后每次请求把这个会话ID发送到服务器，我就知道你是谁了。有人问，如果客户端的浏览器禁用了 Cookie 怎么办？一般这种情况下，会使用一种叫做URL重写的技术来进行会话跟踪，即每次HTTP交互，URL后面都会被附加上一个诸如 sid=xxxxx 这样的参数，服务端据此来识别用户。<br>Cookie其实还可以用在一些方便用户的场景下，设想你某次登陆过一个网站，下次登录的时候不想再次输入账号了，怎么办？这个信息可以写到Cookie里面，访问网站的时候，网站页面的脚本可以读取这个信息，就自动帮你把用户名给填了，能够方便一下用户。这也是Cookie名称的由来，给用户的一点甜头。所以，总结一下：Session是在服务端保存的一个数据结构，用来跟踪用户的状态，这个数据可以保存在集群、数据库、文件中；Cookie是客户端保存用户信息的一种机制，用来记录用户的一些信息，也是实现Session的一种方式。</p>
 <h3 id="4-说一下-session-的工作原理？"><a href="#4-说一下-session-的工作原理？" class="headerlink" title="4. 说一下 session 的工作原理？"></a>4. 说一下 session 的工作原理？</h3><p>其实session是一个存在服务器上的类似于一个散列表格的文件。里面存有我们需要的信息，在我们需要用的时候可以从里面取出来。类似于一个大号的map吧，里面的键存储的是用户的sessionid，用户向服务器发送请求的时候会带上这个sessionid。这时就可以从中取出对应的值了。</p>
+<h3 id="5-如果客户端禁止-cookie-能实现-session-还能用吗？"><a href="#5-如果客户端禁止-cookie-能实现-session-还能用吗？" class="headerlink" title="5. 如果客户端禁止 cookie 能实现 session 还能用吗？"></a>5. 如果客户端禁止 cookie 能实现 session 还能用吗？</h3><p>Cookie与 Session，一般认为是两个独立的东西，Session采用的是在服务器端保持状态的方案，而Cookie采用的是在客户端保持状态的方案。但为什么禁用Cookie就不能得到Session呢？因为Session是用Session ID来确定当前对话所对应的服务器Session，而Session ID是通过Cookie来传递的，禁用Cookie相当于失去了Session ID，也就得不到Session了。</p>
+<p>假定用户关闭Cookie的情况下使用Session，其实现途径有以下几种：</p>
+<p>设置php.ini配置文件中的“session.use_trans_sid = 1”，或者编译时打开打开了“–enable-trans-sid”选项，让PHP自动跨页传递Session ID。<br>手动通过URL传值、隐藏表单传递Session ID。<br>用文件、数据库等形式保存Session ID，在跨页过程中手动调用。</p>
+<h3 id="6-spring-mvc-和-struts-的区别是什么？"><a href="#6-spring-mvc-和-struts-的区别是什么？" class="headerlink" title="6. spring mvc 和 struts 的区别是什么？"></a>6. spring mvc 和 struts 的区别是什么？</h3><ul>
+<li>拦截机制的不同</li>
+</ul>
+<p>Struts2是类级别的拦截，每次请求就会创建一个Action，和Spring整合时Struts2的ActionBean注入作用域是原型模式prototype，然后通过setter，getter吧request数据注入到属性。Struts2中，一个Action对应一个request，response上下文，在接收参数时，可以通过属性接收，这说明属性参数是让多个方法共享的。Struts2中Action的一个方法可以对应一个url，而其类属性却被所有方法共享，这也就无法用注解或其他方式标识其所属方法了，只能设计为多例。<br>　　<br>SpringMVC是方法级别的拦截，一个方法对应一个Request上下文，所以方法直接基本上是独立的，独享request，response数据。而每个方法同时又何一个url对应，参数的传递是直接注入到方法中的，是方法所独有的。处理结果通过ModeMap返回给框架。在Spring整合时，SpringMVC的Controller Bean默认单例模式Singleton，所以默认对所有的请求，只会创建一个Controller，有应为没有共享的属性，所以是线程安全的，如果要改变默认的作用域，需要添加@Scope注解修改。<br>　　<br>Struts2有自己的拦截Interceptor机制，SpringMVC这是用的是独立的Aop方式，这样导致Struts2的配置文件量还是比SpringMVC大。</p>
+<ul>
+<li><p>底层框架的不同<br>　　<br>Struts2采用Filter（StrutsPrepareAndExecuteFilter）实现，SpringMVC（DispatcherServlet）则采用Servlet实现。Filter在容器启动之后即初始化；服务停止以后坠毁，晚于Servlet。Servlet在是在调用时初始化，先于Filter调用，服务停止后销毁。</p>
+</li>
+<li><p>性能方面</p>
+</li>
+</ul>
+<p>Struts2是类级别的拦截，每次请求对应实例一个新的Action，需要加载所有的属性值注入，SpringMVC实现了零配置，由于SpringMVC基于方法的拦截，有加载一次单例模式bean注入。所以，SpringMVC开发效率和性能高于Struts2。</p>
+<ul>
+<li>配置方面<br>　　<br>spring MVC和Spring是无缝的。从这个项目的管理和安全上也比Struts2高。</li>
+</ul>
 
       
     </div>
@@ -478,7 +495,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第二周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第二周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、深拷贝和浅拷贝区别是什么？"><span class="nav-number">1.1.</span> <span class="nav-text">1、深拷贝和浅拷贝区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-jsp-和-servlet-有什么区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2. jsp 和 servlet 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-session-和-cookie-有什么区别？"><span class="nav-number">1.3.</span> <span class="nav-text">3.  session 和 cookie 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-说一下-session-的工作原理？"><span class="nav-number">1.4.</span> <span class="nav-text">4. 说一下 session 的工作原理？</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第二周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第二周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、深拷贝和浅拷贝区别是什么？"><span class="nav-number">1.1.</span> <span class="nav-text">1、深拷贝和浅拷贝区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-jsp-和-servlet-有什么区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2. jsp 和 servlet 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-session-和-cookie-有什么区别？"><span class="nav-number">1.3.</span> <span class="nav-text">3.  session 和 cookie 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-说一下-session-的工作原理？"><span class="nav-number">1.4.</span> <span class="nav-text">4. 说一下 session 的工作原理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-如果客户端禁止-cookie-能实现-session-还能用吗？"><span class="nav-number">1.5.</span> <span class="nav-text">5. 如果客户端禁止 cookie 能实现 session 还能用吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-spring-mvc-和-struts-的区别是什么？"><span class="nav-number">1.6.</span> <span class="nav-text">6. spring mvc 和 struts 的区别是什么？</span></a></li></ol></li></ol></div>
             
 
           </div>
