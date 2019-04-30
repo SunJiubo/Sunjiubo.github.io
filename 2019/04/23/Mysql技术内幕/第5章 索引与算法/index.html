@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="第5章 索引与算法一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。 DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-29T14:03:31.552Z">
+<meta property="og:updated_time" content="2019-04-30T13:48:39.371Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第5章 索引与算法">
 <meta name="twitter:description" content="第5章 索引与算法一些开发人员总是事后才想起添加索引——我一直认为，这源于一种错误的开发模式。如果知道数据的使用，从一开始就应该在需要处添加索引。 DBA往往不够了解业务的数据流，而添加索引需要通过监控大量的SQL语句进而从中找到问题，这个步骤所需的时间肯定是远大于初始添加索引所需要的时间，并且可能会遗漏一部分的索引。">
@@ -455,7 +455,77 @@
 <p>InnoDB的表空间都有一个space_id,用户索要查询的应该是某个表空间的某个连续16kb的页，即偏移量offset。InnoDB将space_id左移20位，然后加上这个space_id和offset，即关键字K=space_id&lt;&lt;20+space_id+offset,然后通过出发散列到各个槽中去。</p>
 <h4 id="自适应哈希索引"><a href="#自适应哈希索引" class="headerlink" title="自适应哈希索引"></a>自适应哈希索引</h4><p>自适应哈希索引采用之前讨论的哈希表的方式实现的，不同的是，这仅是数据库自身创建并使用的，DBA并不能对其进行干预，自适应哈希索引经哈希函数映射到一个哈希表中，因此对于字典类型的查询非常迅速，但是对范围查找就无能为力了。</p>
 <p>哈希索引只能用来搜索等值的查询。</p>
-<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4>
+<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>全文检索是将存储于数据库中的整本书或整篇文章中的任意内容信息查找出来的技术。他可以根据需要来获取全文中有关章、节、段、句、词等信息，也可以进行各种统计和分析。</p>
+<p>1.2开始，InnoDB开始支持全文检索，其支持MyISAM存储引擎的全部功能，并且还支持其他的一些特性。</p>
+<h4 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h4><p>全文检索通常使用倒排索引来实习那，倒排索引和B+树一样，也是一种索引结构。他在辅助表中存储了单词与单词自身在一个或多个文档中所在位置之间的映射，通常使用关联数组实现，其拥有两种表现形式：</p>
+<ul>
+<li>inverted file index，其表现形式为{单词，单词所在文档的ID}</li>
+<li>full inverted index,其表现为{单词，(单词所在文档的ID：在具体文档中的位置)}，占用更多的空间，但是能更好的定位数据，并扩充一些其他的搜索特性。</li>
+</ul>
+<h4 id="InnoDB全文检索"><a href="#InnoDB全文检索" class="headerlink" title="InnoDB全文检索"></a>InnoDB全文检索</h4><p>InnoDB采用 full inverted index的方式。在InnoDB中，将(Doc,Pos)视为一个ilist，因此在全文检索的表中，有两个列，一个是word字段，一个是ilist字段，并且在word字段上设有索引。此外因为在ilist字段中存放了Pos信息，故可以进行Proximity Search，而MyISAM不支持该特性。</p>
+<p>倒排索引需要将word放到一张表中，这个表称为Auxiliary Table(辅助表)。在InnoDB中，为了提高全文检索的并行性能，共有6张辅助表，目前每张表根据word的Latin编码进行分区。</p>
+<p>辅助表是持久的表，存放于磁盘。</p>
+<p>还有另一个重要的概念FTS Index Cache(全文检索索引缓存)，其用来提高全文检索的性能。</p>
+<p>全文检索索引缓存是以个红黑树结构，其根据(word,ilist)进行排序。这意味着插入的数据已经更新到对应的表中，但是对全文索引的更新可能在分词操作后还在FTS Index Cache中，辅助表可能还没有更新。InnoDB会批量对辅助表进行更新，而不是每次插入后更新一次辅助表。当对全文索引进行查询时，辅助表首先会将缓存中对应的word字段合并到辅助表中，然后进行查询，这种merge操作非常类似于之前的Insert Buffer的功能，不容的是Insert Buffer是一个持久的对象，并且其实B+树的结构。然而缓存的作用又和Indert Buffer是类似的，他提高了InnoDB的性能，并且由于其根据红黑树排序后进行批量插入，其差生的辅助表相对较小。</p>
+<p>InnoDB总是在事务提交时将分词写入到FTS Index Cache，然后在批量更新到磁盘。InnoDB存储引擎通过一种延时的、批量的写入方式来提高数据库的性能，但上述操作进在事务提交时发生。</p>
+<p>如果关闭数据库，缓存中的数据库会同步到磁盘上的辅助表中；<br>发生宕机时，若缓存中数据库为同步到磁盘上，下次重启数据库时，当用户对表进行全文检索或查询或插入操作时，InnoDB会自动读取未完成的文档，然后进行分词操作，在将分词的结果放入缓存中。</p>
+<p>innodb_ft_cache_size来控制缓存的大小，默认为32m。当缓存满了，会将其中的(word,ilist)分词信息同步到磁盘的辅助表中。增大参数可以提高全文检索的性能，但是宕机时，未同步到瓷盘中的索引信息可能需要更长时间进行恢复。</p>
+<p>在InnoDB中，为了支持全文检索，必须有一个列与word进行映射，在InnoDB中将其命名为FTS_DOC_ID,其类型必须为BIGINT UNSIGNED NOT NULL,并且InnoDB会自动为该列加上一个名为FTS_DOC_ID_INDEX的Unique index。上述操作都是引擎自己完成的，用户也可以在建表时自动添加FTS_DOC_ID,以及相应的Unique Index。由于FTS_DOC_ID有特殊意义，因此创建时必须注意相应的类型，否则MySQL会抛出错误。</p>
+<p>文档中分词的插入操作是在事务提交时完成的，然而对于删除操作，其在事务提交时，不删除辅助表中的记录，而只是删除FTS Cache Index的记录。对于辅助表中被删除的记录，InnoDB会记录其FTS Document ID，并将其保存在DELETED auxiliary table 中。</p>
+<p>为了防止索引越变越大，InnoDB提供了一种方式，允许用户手工的将已经删除的记录从索引中彻底的删除，命令式OPTIMIZE TABLE。</p>
+<p>若被删除的文档非常多，那么OPTIMMIZE TABLE操作可能需要占用非常多的时间，这回影响应用程序的并发性，并极大的降低了用户的响应时间，用户可以通过参数innodb_ft_num_word_optimize来限制每次实际删除的分词数量，默认为2000.</p>
+<p>当前InnoDB的全文检索还存在以下的限制</p>
+<ul>
+<li>每张表只能有一个全文检索的索引</li>
+<li>有多列组合而成的全文检索的索引列必须使用相同的字符集和排序规则</li>
+<li>不支持没有单词界定符的语言，如中文、日语、韩语等</li>
+</ul>
+<h4 id="全文检索-1"><a href="#全文检索-1" class="headerlink" title="全文检索"></a>全文检索</h4><p>MySQL数据库通过MATCH()…AGAINST()语法支持全文检索的查询，MATCH指定了需要被查询的列，AGAINST指定了使用何种方法去进行查询。</p>
+<ol>
+<li>Natural Language</li>
+</ol>
+<p>全文检索通过MATCH函数进行查询，默认采用Natural Language模式，其表示查询带有指定word的文档。</p>
+<p>在WHERE条件中使用MATCH函数，查询返回的结果是根据相关性(Relevance)进行降序排序的，即相关性最高的结果放在第一位。相关性的值是一个非负的浮点数字，0表示无相关性。<br>相关性的计算依据一下4个条件：</p>
+<ul>
+<li>word是否在文档中出现</li>
+<li>word在文档中出现的次数</li>
+<li>word在索引列中的数量</li>
+<li>多少个文档包含该word</li>
+</ul>
+<p>对于InnoDB的全文搜索还需要考虑一下的因素</p>
+<ul>
+<li>查询的word在stopword列中，湖绿该字符串的查询</li>
+<li>查询的word的字符长度是否在区间[innodb_ft_min_token_size,innodb_ft_max_token_size]中</li>
+</ul>
+<p>参数innodb_ft_min_token_size和innodb_ft_max_token_size控制InnoDB查询字符的长度，当长度小于innodb_ft_min_token_size或者大于innodb_ft_max_token_size时，会忽略改词的查找。<br>最小值默认为3，最大值默认为84.</p>
+<ol start="2">
+<li>Boolean</li>
+</ol>
+<p>使用IN BOOLEAN MODE修饰符来进行全文检索。当使用该修饰符时，查询字符串的前后字符会有特殊的意义。</p>
+<ul>
+<li>+表示该word必须存在</li>
+<li>-表示该word必须排除</li>
+<li>(no operator)表示该word是可选的，但是如果出现，其相关性会更高</li>
+<li>@distance表示查询的多个单词之间的距离是否在distance之内，distance的单位是字节。这种全文检索的查询也称为Proximity Search。</li>
+<li><blockquote>
+<p>表示出现该单词时增加相关性</p>
+</blockquote>
+</li>
+<li>&lt;表示出现该单词时降低相关性</li>
+<li>~表示允许出现该单词，但是出现时相关性为负</li>
+<li>*表示已该单词开头的单词</li>
+<li>“表示短语</li>
+</ul>
+<ol start="3">
+<li>Query Expansion</li>
+</ol>
+<p>MySQL还支持全文检索的扩展查询。这种查询通常在查询的关键词太短，用户需要implied knowledge(隐含知识)时进行。</p>
+<p>通过在查询短语中添加WITH QUERY EXPANSION 或 IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION 可以开启blind query expansion(又称automatic relevance feedback)。该查询分为两个阶段。</p>
+<ul>
+<li>第一阶段：根据搜索的单词进行全文索引查询</li>
+<li>第二阶段：根据第一阶段产生的分词在进行一次全文检索的查询</li>
+</ul>
+
       
     </div>
     
@@ -607,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第5章-索引与算法"><span class="nav-number">1.</span> <span class="nav-text">第5章 索引与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎索引概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎索引概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">1.2.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二分查找"><span class="nav-number">1.2.1.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树和平衡二叉树（ALV树）"><span class="nav-number">1.2.2.</span> <span class="nav-text">二叉查找树和平衡二叉树（ALV树）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树"><span class="nav-number">1.3.</span> <span class="nav-text">B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的插入操作"><span class="nav-number">1.3.1.</span> <span class="nav-text">B+树的插入操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的删除操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">B+树的删除操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树索引"><span class="nav-number">1.4.</span> <span class="nav-text">B+树索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#聚集索引"><span class="nav-number">1.4.1.</span> <span class="nav-text">聚集索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助索引"><span class="nav-number">1.4.2.</span> <span class="nav-text">辅助索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的分裂"><span class="nav-number">1.4.3.</span> <span class="nav-text">B+树索引的分裂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的管理"><span class="nav-number">1.4.4.</span> <span class="nav-text">B+树索引的管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cardinality值"><span class="nav-number">1.5.</span> <span class="nav-text">Cardinality值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Cardinality"><span class="nav-number">1.5.1.</span> <span class="nav-text">什么是Cardinality</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB存储引擎的Cardinality统计"><span class="nav-number">1.5.2.</span> <span class="nav-text">InnoDB存储引擎的Cardinality统计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树索引的使用"><span class="nav-number">1.6.</span> <span class="nav-text">B+树索引的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同应用中B-树索引的使用"><span class="nav-number">1.6.1.</span> <span class="nav-text">不同应用中B+树索引的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联合索引"><span class="nav-number">1.6.2.</span> <span class="nav-text">联合索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#覆盖索引"><span class="nav-number">1.6.3.</span> <span class="nav-text">覆盖索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化器选择不使用索引的情况"><span class="nav-number">1.6.4.</span> <span class="nav-text">优化器选择不使用索引的情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引提示"><span class="nav-number">1.6.5.</span> <span class="nav-text">索引提示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Multi-Range-Read优化"><span class="nav-number">1.6.6.</span> <span class="nav-text">Multi-Range Read优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Index-Condition-Pushdown-ICP-优化"><span class="nav-number">1.6.7.</span> <span class="nav-text">Index Condition Pushdown(ICP)优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希算法"><span class="nav-number">1.7.</span> <span class="nav-text">哈希算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希表"><span class="nav-number">1.7.1.</span> <span class="nav-text">哈希表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB中的哈希算法"><span class="nav-number">1.7.2.</span> <span class="nav-text">InnoDB中的哈希算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自适应哈希索引"><span class="nav-number">1.7.3.</span> <span class="nav-text">自适应哈希索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全文检索"><span class="nav-number">1.8.</span> <span class="nav-text">全文检索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.8.1.</span> <span class="nav-text">概述</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第5章-索引与算法"><span class="nav-number">1.</span> <span class="nav-text">第5章 索引与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB存储引擎索引概述"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB存储引擎索引概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">1.2.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二分查找"><span class="nav-number">1.2.1.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树和平衡二叉树（ALV树）"><span class="nav-number">1.2.2.</span> <span class="nav-text">二叉查找树和平衡二叉树（ALV树）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树"><span class="nav-number">1.3.</span> <span class="nav-text">B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的插入操作"><span class="nav-number">1.3.1.</span> <span class="nav-text">B+树的插入操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树的删除操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">B+树的删除操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树索引"><span class="nav-number">1.4.</span> <span class="nav-text">B+树索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#聚集索引"><span class="nav-number">1.4.1.</span> <span class="nav-text">聚集索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助索引"><span class="nav-number">1.4.2.</span> <span class="nav-text">辅助索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的分裂"><span class="nav-number">1.4.3.</span> <span class="nav-text">B+树索引的分裂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树索引的管理"><span class="nav-number">1.4.4.</span> <span class="nav-text">B+树索引的管理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cardinality值"><span class="nav-number">1.5.</span> <span class="nav-text">Cardinality值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Cardinality"><span class="nav-number">1.5.1.</span> <span class="nav-text">什么是Cardinality</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB存储引擎的Cardinality统计"><span class="nav-number">1.5.2.</span> <span class="nav-text">InnoDB存储引擎的Cardinality统计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-树索引的使用"><span class="nav-number">1.6.</span> <span class="nav-text">B+树索引的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同应用中B-树索引的使用"><span class="nav-number">1.6.1.</span> <span class="nav-text">不同应用中B+树索引的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联合索引"><span class="nav-number">1.6.2.</span> <span class="nav-text">联合索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#覆盖索引"><span class="nav-number">1.6.3.</span> <span class="nav-text">覆盖索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化器选择不使用索引的情况"><span class="nav-number">1.6.4.</span> <span class="nav-text">优化器选择不使用索引的情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引提示"><span class="nav-number">1.6.5.</span> <span class="nav-text">索引提示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Multi-Range-Read优化"><span class="nav-number">1.6.6.</span> <span class="nav-text">Multi-Range Read优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Index-Condition-Pushdown-ICP-优化"><span class="nav-number">1.6.7.</span> <span class="nav-text">Index Condition Pushdown(ICP)优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希算法"><span class="nav-number">1.7.</span> <span class="nav-text">哈希算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希表"><span class="nav-number">1.7.1.</span> <span class="nav-text">哈希表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB中的哈希算法"><span class="nav-number">1.7.2.</span> <span class="nav-text">InnoDB中的哈希算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自适应哈希索引"><span class="nav-number">1.7.3.</span> <span class="nav-text">自适应哈希索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全文检索"><span class="nav-number">1.8.</span> <span class="nav-text">全文检索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.8.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#倒排索引"><span class="nav-number">1.8.2.</span> <span class="nav-text">倒排索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB全文检索"><span class="nav-number">1.8.3.</span> <span class="nav-text">InnoDB全文检索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全文检索-1"><span class="nav-number">1.8.4.</span> <span class="nav-text">全文检索</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
