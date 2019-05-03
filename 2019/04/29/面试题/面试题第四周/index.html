@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="208面试题-第三周1、 什么是 CSRF 攻击，如何避免？CSRF（Cross-site request forgery）也被称为 one-click attack或者 session riding，中文全称是叫跨站请求伪造。一般来说，攻击者通过伪造用户的浏览器的请求，向访问一个用户自己曾经认证访问过的网站发送出去，使目标网站接收并误以为是用户的真实操作而去执行命令。常用于盗取账号、转账、发送虚">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-03T13:18:55.438Z">
+<meta property="og:updated_time" content="2019-05-03T14:33:04.272Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题第四周">
 <meta name="twitter:description" content="208面试题-第三周1、 什么是 CSRF 攻击，如何避免？CSRF（Cross-site request forgery）也被称为 one-click attack或者 session riding，中文全称是叫跨站请求伪造。一般来说，攻击者通过伪造用户的浏览器的请求，向访问一个用户自己曾经认证访问过的网站发送出去，使目标网站接收并误以为是用户的真实操作而去执行命令。常用于盗取账号、转账、发送虚">
@@ -338,10 +338,14 @@
 <h3 id="5-http-响应码-301-和-302-代表的是什么？有什么区别？"><a href="#5-http-响应码-301-和-302-代表的是什么？有什么区别？" class="headerlink" title="5. http 响应码 301 和 302 代表的是什么？有什么区别？"></a>5. http 响应码 301 和 302 代表的是什么？有什么区别？</h3><p>答：301，302 都是HTTP状态的编码，都代表着某个URL发生了转移。</p>
 <p>区别： </p>
 <p>301 redirect: 301 代表永久性转移(Permanently Moved)。<br>302 redirect: 302 代表暂时性转移(Temporarily Moved )。 </p>
-<h3 id="6-forward-和-redirect-的区别？"><a href="#6-forward-和-redirect-的区别？" class="headerlink" title="6. forward 和 redirect 的区别？"></a>6. forward 和 redirect 的区别？</h3><p>Forward和Redirect代表了两种请求转发方式：直接转发和间接转发。</p>
-<p>直接转发方式（Forward），客户端和浏览器只发出一次请求，Servlet、HTML、JSP或其它信息资源，由第二个信息资源响应该请求，在请求对象request中，保存的对象对于每个信息资源是共享的。</p>
-<p>间接转发方式（Redirect）实际是两次HTTP请求，服务器端在响应第一次请求的时候，让浏览器再向另外一个URL发出请求，从而达到转发的目的。</p>
-<p>举个通俗的例子：<br>　　<br>直接转发就相当于：“A找B借钱，B说没有，B去找C借，借到借不到都会把消息传递给A”；<br>　　<br>间接转发就相当于：”A找B借钱，B说没有，让A去找C借”。</p>
+<h3 id="6-简述-tcp-和-udp的区别？"><a href="#6-简述-tcp-和-udp的区别？" class="headerlink" title="6. 简述 tcp 和 udp的区别？"></a>6. 简述 tcp 和 udp的区别？</h3><ul>
+<li>TCP面向连接（如打电话要先拨号建立连接）;UDP是无连接的，即发送数据之前不需要建立连接。</li>
+<li>TCP提供可靠的服务。也就是说，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达;UDP尽最大努力交付，即不保证可靠交付。</li>
+<li>Tcp通过校验和，重传控制，序号标识，滑动窗口、确认应答实现可靠传输。如丢包时的重发控制，还可以对次序乱掉的分包进行顺序控制。</li>
+<li>UDP具有较好的实时性，工作效率比TCP高，适用于对高速传输和实时性有较高的通信或广播通信。</li>
+<li>每一条TCP连接只能是点到点的;UDP支持一对一，一对多，多对一和多对多的交互通信。</li>
+<li>TCP对系统资源要求较多，UDP对系统资源要求较少。</li>
+</ul>
 
       
     </div>
@@ -490,7 +494,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第三周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第三周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-什么是-CSRF-攻击，如何避免？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 什么是 CSRF 攻击，如何避免？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-throw-和-throws-的区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2. throw 和 throws 的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-final、finally、finalize-有什么区别？"><span class="nav-number">1.3.</span> <span class="nav-text">3. final、finally、finalize 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-try-catch-finally-中哪个部分可以省略？"><span class="nav-number">1.4.</span> <span class="nav-text">4. try-catch-finally 中哪个部分可以省略？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-http-响应码-301-和-302-代表的是什么？有什么区别？"><span class="nav-number">1.5.</span> <span class="nav-text">5. http 响应码 301 和 302 代表的是什么？有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-forward-和-redirect-的区别？"><span class="nav-number">1.6.</span> <span class="nav-text">6. forward 和 redirect 的区别？</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第三周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第三周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-什么是-CSRF-攻击，如何避免？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 什么是 CSRF 攻击，如何避免？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-throw-和-throws-的区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2. throw 和 throws 的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-final、finally、finalize-有什么区别？"><span class="nav-number">1.3.</span> <span class="nav-text">3. final、finally、finalize 有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-try-catch-finally-中哪个部分可以省略？"><span class="nav-number">1.4.</span> <span class="nav-text">4. try-catch-finally 中哪个部分可以省略？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-http-响应码-301-和-302-代表的是什么？有什么区别？"><span class="nav-number">1.5.</span> <span class="nav-text">5. http 响应码 301 和 302 代表的是什么？有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-简述-tcp-和-udp的区别？"><span class="nav-number">1.6.</span> <span class="nav-text">6. 简述 tcp 和 udp的区别？</span></a></li></ol></li></ol></div>
             
 
           </div>
