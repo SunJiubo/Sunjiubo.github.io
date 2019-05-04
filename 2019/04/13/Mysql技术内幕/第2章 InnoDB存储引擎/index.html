@@ -86,12 +86,12 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
-<meta property="og:updated_time" content="2019-04-18T12:58:36.754Z">
+<meta property="og:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/InnoDB存储引擎/2.jpg">
+<meta property="og:updated_time" content="2019-05-04T14:24:31.505Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第2章 InnoDB存储引擎">
 <meta name="twitter:description" content="第2章 InnoDB存储引擎InnoDB是事务安全的MySQL存储引擎，设计上采用了类似于Oracle数据库的架构。通常来说，InnoDB存储引擎是OLTP应用中核心表的首选存储引擎。">
-<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg">
+<meta name="twitter:image" content="https://sunjiubo.github.io/2019/04/13/Mysql技术内幕/第2章%20InnoDB存储引擎/InnoDB存储引擎/2.jpg">
 
 
 
@@ -323,7 +323,7 @@
 <li>重做日志缓冲</li>
 <li>… …</li>
 </ul>
-<p><img src="/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/第2章-InnoDB存储引擎/存储引擎.jpg" alt="InnoDB体系框架"></p>
+<p><img src="/2019/04/13/Mysql技术内幕/第2章 InnoDB存储引擎/InnoDB存储引擎/2.jpg" alt="InnoDB体系框架"></p>
 <p>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓冲的是最近的数据。此外将已修改的数据文件刷新到磁盘文件中，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态。</p>
 <h4 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h4><p>InnoDB存储引擎是多线程的模型，因此其后台有多个不同的后台线程，负责处理不同的任务。</p>
 <ol>
