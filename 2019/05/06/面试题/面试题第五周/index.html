@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="208面试题-第四周1、 spring 常用的注入方式有哪些？Spring通过DI（依赖注入）实现IOC（控制反转），常用的注入方式主要有三种： 构造方法注入setter注入基于注解的注入">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-06T13:15:34.500Z">
+<meta property="og:updated_time" content="2019-05-06T14:31:49.811Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题第五周">
 <meta name="twitter:description" content="208面试题-第四周1、 spring 常用的注入方式有哪些？Spring通过DI（依赖注入）实现IOC（控制反转），常用的注入方式主要有三种： 构造方法注入setter注入基于注解的注入">
@@ -311,7 +311,8 @@
       
         <h2 id="208面试题-第四周"><a href="#208面试题-第四周" class="headerlink" title="208面试题-第四周"></a>208面试题-第四周</h2><h3 id="1、-spring-常用的注入方式有哪些？"><a href="#1、-spring-常用的注入方式有哪些？" class="headerlink" title="1、 spring 常用的注入方式有哪些？"></a>1、 spring 常用的注入方式有哪些？</h3><p>Spring通过DI（依赖注入）实现IOC（控制反转），常用的注入方式主要有三种：</p>
 <p>构造方法注入<br>setter注入<br>基于注解的注入<br><a id="more"></a></p>
-<h3 id="2-spring-中的-bean-是线程安全的吗？"><a href="#2-spring-中的-bean-是线程安全的吗？" class="headerlink" title="2. spring 中的 bean 是线程安全的吗？"></a>2. spring 中的 bean 是线程安全的吗？</h3><p>Spring容器中的Bean是否线程安全，容器本身并没有提供Bean的线程安全策略，因此可以说spring容器中的Bean本身不具备线程安全的特性，但是具体还是要结合具体scope的Bean去研究。</p>
+<h3 id="2-说一下-spring-的事务隔离？"><a href="#2-说一下-spring-的事务隔离？" class="headerlink" title="2. 说一下 spring 的事务隔离？"></a>2. 说一下 spring 的事务隔离？</h3><p>事务隔离级别指的是一个事务对数据的修改与另一个并行的事务的隔离程度，当多个事务同时访问相同数据时，如果没有采取必要的隔离机制，就可能发生以下问题：</p>
+<p>脏读：一个事务读到另一个事务未提交的更新数据。<br>幻读：例如第一个事务对一个表中的数据进行了修改，比如这种修改涉及到表中的“全部数据行”。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入“一行新数据”。那么，以后就会发生操作第一个事务的用户发现表中还存在没有修改的数据行，就好象发生了幻觉一样。<br>不可重复读：比方说在同一个事务中先后执行两条一模一样的select语句，期间在此次事务中没有执行过任何DDL语句，但先后得到的结果不一致，这就是不可重复读。</p>
 
       
     </div>
@@ -460,7 +461,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第四周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第四周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-spring-常用的注入方式有哪些？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 spring 常用的注入方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-spring-中的-bean-是线程安全的吗？"><span class="nav-number">1.2.</span> <span class="nav-text">2. spring 中的 bean 是线程安全的吗？</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第四周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第四周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-spring-常用的注入方式有哪些？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 spring 常用的注入方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-说一下-spring-的事务隔离？"><span class="nav-number">1.2.</span> <span class="nav-text">2. 说一下 spring 的事务隔离？</span></a></li></ol></li></ol></div>
             
 
           </div>
