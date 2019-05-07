@@ -86,10 +86,12 @@
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
 <meta property="og:description" content="208面试题-第四周1、 spring 常用的注入方式有哪些？Spring通过DI（依赖注入）实现IOC（控制反转），常用的注入方式主要有三种： 构造方法注入setter注入基于注解的注入">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-06T14:31:49.811Z">
+<meta property="og:image" content="https://sunjiubo.github.io/2019/05/06/面试题/面试题第五周/5_3_1.jpg">
+<meta property="og:updated_time" content="2019-05-07T13:12:04.935Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题第五周">
 <meta name="twitter:description" content="208面试题-第四周1、 spring 常用的注入方式有哪些？Spring通过DI（依赖注入）实现IOC（控制反转），常用的注入方式主要有三种： 构造方法注入setter注入基于注解的注入">
+<meta name="twitter:image" content="https://sunjiubo.github.io/2019/05/06/面试题/面试题第五周/5_3_1.jpg">
 
 
 
@@ -313,6 +315,30 @@
 <p>构造方法注入<br>setter注入<br>基于注解的注入<br><a id="more"></a></p>
 <h3 id="2-说一下-spring-的事务隔离？"><a href="#2-说一下-spring-的事务隔离？" class="headerlink" title="2. 说一下 spring 的事务隔离？"></a>2. 说一下 spring 的事务隔离？</h3><p>事务隔离级别指的是一个事务对数据的修改与另一个并行的事务的隔离程度，当多个事务同时访问相同数据时，如果没有采取必要的隔离机制，就可能发生以下问题：</p>
 <p>脏读：一个事务读到另一个事务未提交的更新数据。<br>幻读：例如第一个事务对一个表中的数据进行了修改，比如这种修改涉及到表中的“全部数据行”。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入“一行新数据”。那么，以后就会发生操作第一个事务的用户发现表中还存在没有修改的数据行，就好象发生了幻觉一样。<br>不可重复读：比方说在同一个事务中先后执行两条一模一样的select语句，期间在此次事务中没有执行过任何DDL语句，但先后得到的结果不一致，这就是不可重复读。</p>
+<h3 id="3-说一下-spring-mvc-运行流程？"><a href="#3-说一下-spring-mvc-运行流程？" class="headerlink" title="3. 说一下 spring mvc 运行流程？"></a>3. 说一下 spring mvc 运行流程？</h3><p>Spring MVC运行流程图：</p>
+<p><img src="/2019/05/06/面试题/面试题第五周/5_3_1.jpg" alt></p>
+<p>Spring运行流程描述：</p>
+<ol>
+<li><p>用户向服务器发送请求，请求被Spring 前端控制Servelt DispatcherServlet捕获；</p>
+</li>
+<li><p>DispatcherServlet对请求URL进行解析，得到请求资源标识符（URI）。然后根据该URI，调用HandlerMapping获得该Handler配置的所有相关的对象（包括Handler对象以及Handler对象对应的拦截器），最后以HandlerExecutionChain对象的形式返回；</p>
+</li>
+<li><p>DispatcherServlet 根据获得的Handler，选择一个合适的HandlerAdapter；（附注：如果成功获得HandlerAdapter后，此时将开始执行拦截器的preHandler(…)方法）</p>
+</li>
+<li><p>提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。 在填充Handler的入参过程中，根据你的配置，Spring将帮你做一些额外的工作：</p>
+</li>
+</ol>
+<p>HttpMessageConveter： 将请求消息（如Json、xml等数据）转换成一个对象，将对象转换为指定的响应信息<br>数据转换：对请求消息进行数据转换。如String转换成Integer、Double等<br>数据根式化：对请求消息进行数据格式化。 如将字符串转换成格式化数字或格式化日期等<br>数据验证： 验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中</p>
+<ol start="5">
+<li><p>Handler执行完成后，向DispatcherServlet 返回一个ModelAndView对象；</p>
+</li>
+<li><p>根据返回的ModelAndView，选择一个适合的ViewResolver（必须是已经注册到Spring容器中的ViewResolver)返回给DispatcherServlet ；</p>
+</li>
+<li><p>ViewResolver 结合Model和View，来渲染视图；</p>
+</li>
+<li><p>将渲染结果返回给客户端。</p>
+</li>
+</ol>
 
       
     </div>
@@ -461,7 +487,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第四周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第四周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-spring-常用的注入方式有哪些？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 spring 常用的注入方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-说一下-spring-的事务隔离？"><span class="nav-number">1.2.</span> <span class="nav-text">2. 说一下 spring 的事务隔离？</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#208面试题-第四周"><span class="nav-number">1.</span> <span class="nav-text">208面试题-第四周</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-spring-常用的注入方式有哪些？"><span class="nav-number">1.1.</span> <span class="nav-text">1、 spring 常用的注入方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-说一下-spring-的事务隔离？"><span class="nav-number">1.2.</span> <span class="nav-text">2. 说一下 spring 的事务隔离？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-说一下-spring-mvc-运行流程？"><span class="nav-number">1.3.</span> <span class="nav-text">3. 说一下 spring mvc 运行流程？</span></a></li></ol></li></ol></div>
             
 
           </div>
