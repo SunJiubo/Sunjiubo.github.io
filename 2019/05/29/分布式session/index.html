@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销  Session Sticky 方式管理  简介：粘性s">
+<meta name="description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式session">
 <meta property="og:url" content="https://SunJiubo.github.io/2019/05/29/分布式session/index.html">
 <meta property="og:site_name" content="NineBoy&#39;s Blog">
-<meta property="og:description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销  Session Sticky 方式管理  简介：粘性s">
+<meta property="og:description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-29T14:27:33.076Z">
+<meta property="og:updated_time" content="2019-05-29T14:40:20.813Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式session">
-<meta name="twitter:description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销  Session Sticky 方式管理  简介：粘性s">
+<meta name="twitter:description" content="分布式session的三种实现方式 Session Replication 方式管理 (即session复制)  简介：将一台机器上的Session数据广播复制到集群中其余机器上  使用场景：机器较少，网络流量较小  优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问  缺点：广播式复制到其余机器有一定廷时，带来一定网络开销">
 
 
 
@@ -315,6 +315,7 @@
 <p> 使用场景：机器较少，网络流量较小</p>
 <p> 优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问</p>
 <p> 缺点：广播式复制到其余机器有一定廷时，带来一定网络开销</p>
+<a id="more"></a>
 </li>
 <li><p><strong>Session Sticky 方式管理</strong></p>
 <p> 简介：粘性session、当用户访问集群中某台机器后，强制指定后续所有的请求均落在此机器上</p>
