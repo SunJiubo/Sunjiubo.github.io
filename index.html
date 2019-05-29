@@ -239,6 +239,161 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/05/29/分布式session/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孙九博">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/quan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NineBoy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/29/分布式session/" itemprop="url">分布式session</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-29T22:08:27+08:00">
+                2019-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="分布式session的三种实现方式"><a href="#分布式session的三种实现方式" class="headerlink" title="分布式session的三种实现方式"></a>分布式session的三种实现方式</h2><ol>
+<li><p><strong>Session Replication 方式管理 (即session复制)</strong></p>
+<p> 简介：将一台机器上的Session数据广播复制到集群中其余机器上</p>
+<p> 使用场景：机器较少，网络流量较小</p>
+<p> 优点：实现简单、配置较少、当网络中有机器Down掉时不影响用户访问</p>
+<p> 缺点：广播式复制到其余机器有一定廷时，带来一定网络开销</p>
+</li>
+<li><p><strong>Session Sticky 方式管理</strong></p>
+<p> 简介：粘性session、当用户访问集群中某台机器后，强制指定后续所有的请求均落在此机器上</p>
+<p> 使用场景：机器数量适中、对稳定性要求不是非常苛刻</p>
+<p> 优点：实现简单、配置方便、没有额外的网络开销</p>
+<p> 缺点：网络中有机器人宕机的时候，用户session会丢失、容易造成单点故障</p>
+</li>
+<li><p><strong>缓存集中式管理</strong></p>
+<p> 简介：将session存在分布式缓存急群众的某台机器上，当用户访问不同节点时先从缓存中拿Session信息</p>
+<p> 使用场景：急群众机器数量多、网络环境复杂</p>
+<p> 优点：可靠性好</p>
+<p> 缺点：实现复杂、稳定性依赖于缓存的稳定性、session信息放在缓存时要有合理的策略写入</p>
+</li>
+</ol>
+<h3 id="基于第三种实现方式的实现"><a href="#基于第三种实现方式的实现" class="headerlink" title="基于第三种实现方式的实现"></a>基于第三种实现方式的实现</h3><ol>
+<li>先建立写入策略，给写入的数据加上前缀，前缀可以用类名加上参数的名称</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public String getPrefix() &#123;</span><br><span class="line">	String className = getClass().getSimpleName();</span><br><span class="line">	return className+&quot;:&quot; + prefix;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>然后将key和value写入redis</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public &lt;T&gt; boolean set(KeyPrefix prefix, String key,  T value) &#123;</span><br><span class="line">	 Jedis jedis = null;</span><br><span class="line">	 try &#123;</span><br><span class="line">		 jedis =  jedisPool.getResource();</span><br><span class="line">		 String str = beanToString(value);</span><br><span class="line">		 if(str == null || str.length() &lt;= 0) &#123;</span><br><span class="line">			 return false;</span><br><span class="line">		 &#125;</span><br><span class="line">		//生成真正的key</span><br><span class="line">		 String realKey  = prefix.getPrefix() + key;</span><br><span class="line">		 int seconds =  prefix.expireSeconds();</span><br><span class="line">		 if(seconds &lt;= 0) &#123;</span><br><span class="line">			 jedis.set(realKey, str);</span><br><span class="line">		 &#125;else &#123;</span><br><span class="line">			 jedis.setex(realKey, seconds, str);</span><br><span class="line">		 &#125;</span><br><span class="line">		 return true;</span><br><span class="line">	 &#125;finally &#123;</span><br><span class="line">		  returnToPool(jedis);</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>若用户登录，曾生成一个sessionId给对应的用户，以便识别用户，然后将sessionId加入cookie，这样，下次请求来的时候，cookie就会带上对应的sessionId，后台便会识别对应用户</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">private void addCookie(HttpServletResponse response, String token, MiaoshaUser user) &#123;</span><br><span class="line">	redisService.set(MiaoshaUserKey.token, token, user);</span><br><span class="line">	Cookie cookie = new Cookie(COOKI_NAME_TOKEN, token);</span><br><span class="line">	cookie.setMaxAge(MiaoshaUserKey.token.expireSeconds());</span><br><span class="line">	cookie.setPath(&quot;/&quot;);</span><br><span class="line">	response.addCookie(cookie);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>最后用拦截器，获取cookie或者请求中的sessionId，然后进入缓存获取对应用户即可</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,</span><br><span class="line">		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception &#123;</span><br><span class="line">	HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);</span><br><span class="line">	HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);</span><br><span class="line">	</span><br><span class="line">	String paramToken = request.getParameter(MiaoshaUserService.COOKI_NAME_TOKEN);</span><br><span class="line">	String cookieToken = getCookieValue(request, MiaoshaUserService.COOKI_NAME_TOKEN);</span><br><span class="line">	if(StringUtils.isEmpty(cookieToken) &amp;&amp; StringUtils.isEmpty(paramToken)) &#123;</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;</span><br><span class="line">	return userService.getByToken(response, token);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">private String getCookieValue(HttpServletRequest request, String cookiName) &#123;</span><br><span class="line">	Cookie[]  cookies = request.getCookies();</span><br><span class="line">	for(Cookie cookie : cookies) &#123;</span><br><span class="line">		if(cookie.getName().equals(cookiName)) &#123;</span><br><span class="line">			return cookie.getValue();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://SunJiubo.github.io/2019/04/23/Mysql技术内幕/第5章 索引与算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1408,7 +1563,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
